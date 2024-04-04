@@ -1,0 +1,45 @@
+From a9fbe35f06d91c938d906da3db22ffafffe3fcc7 Mon Sep 17 00:00:00 2001
+From: Mat Booth <mat.booth@gmail.com>
+Date: Thu, 4 Apr 2024 17:36:55 +0100
+Subject: [PATCH] Update aes version
+
+---
+ Cargo.toml     | 5 +++--
+ src/decrypt.rs | 6 +++---
+ 2 files changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/Cargo.toml b/Cargo.toml
+index 34f6592..e20d407 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -18,8 +18,9 @@ description = "The audio fetching logic for librespot"
+ license = "MIT"
+ repository = "https://github.com/librespot-org/librespot"
+ 
+-[dependencies.aes-ctr]
+-version = "0.6"
++[dependencies.aes]
++version = "0.7"
++features = ["ctr"]
+ 
+ [dependencies.byteorder]
+ version = "1.4"
+diff --git a/src/decrypt.rs b/src/decrypt.rs
+index 17f4edb..a06c746 100644
+--- a/src/decrypt.rs
++++ b/src/decrypt.rs
+@@ -1,8 +1,8 @@
+ use std::io;
+ 
+-use aes_ctr::cipher::generic_array::GenericArray;
+-use aes_ctr::cipher::{NewStreamCipher, SyncStreamCipher, SyncStreamCipherSeek};
+-use aes_ctr::Aes128Ctr;
++use aes::cipher::generic_array::GenericArray;
++use aes::cipher::{NewCipher, StreamCipher, StreamCipherSeek};
++use aes::Aes128Ctr;
+ 
+ use librespot_core::audio_key::AudioKey;
+ 
+-- 
+2.41.0
+
