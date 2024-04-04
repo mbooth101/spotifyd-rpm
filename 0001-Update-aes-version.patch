@@ -1,0 +1,46 @@
+From 9cecc30b476487007ff829fd563dba257407805d Mon Sep 17 00:00:00 2001
+From: Mat Booth <mat.booth@gmail.com>
+Date: Thu, 4 Apr 2024 23:51:26 +0100
+Subject: [PATCH 1/2] Update aes version
+
+---
+ Cargo.toml    | 5 +++--
+ src/server.rs | 6 +++---
+ 2 files changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/Cargo.toml b/Cargo.toml
+index 4f7ac18..ffac104 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -18,8 +18,9 @@ description = "The discovery logic for librespot"
+ license = "MIT"
+ repository = "https://github.com/librespot-org/librespot"
+ 
+-[dependencies.aes-ctr]
+-version = "0.6"
++[dependencies.aes]
++version = "0.7"
++features = ["ctr"]
+ 
+ [dependencies.base64]
+ version = "0.13"
+diff --git a/src/server.rs b/src/server.rs
+index 57f5bf4..1294b40 100644
+--- a/src/server.rs
++++ b/src/server.rs
+@@ -6,9 +6,9 @@ use std::pin::Pin;
+ use std::sync::Arc;
+ use std::task::{Context, Poll};
+ 
+-use aes_ctr::cipher::generic_array::GenericArray;
+-use aes_ctr::cipher::{NewStreamCipher, SyncStreamCipher};
+-use aes_ctr::Aes128Ctr;
++use aes::cipher::generic_array::GenericArray;
++use aes::cipher::{NewCipher, StreamCipher};
++use aes::Aes128Ctr;
+ use futures_core::Stream;
+ use hmac::{Hmac, Mac, NewMac};
+ use hyper::service::{make_service_fn, service_fn};
+-- 
+2.41.0
+
