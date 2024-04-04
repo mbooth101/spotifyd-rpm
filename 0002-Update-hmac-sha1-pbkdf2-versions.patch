@@ -1,0 +1,55 @@
+From 2fceef2cb6c62dc7307bb5e6232cecc1041c03d6 Mon Sep 17 00:00:00 2001
+From: Mat Booth <mat.booth@gmail.com>
+Date: Thu, 4 Apr 2024 16:12:32 +0100
+Subject: [PATCH 2/2] Update hmac, sha1, pbkdf2 versions
+
+---
+ Cargo.toml                  | 6 +++---
+ src/connection/handshake.rs | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/Cargo.toml b/Cargo.toml
+index ebedc0d..104e3bc 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -49,7 +49,7 @@ features = [
+ default-features = false
+ 
+ [dependencies.hmac]
+-version = "0.11"
++version = "0.12"
+ 
+ [dependencies.http]
+ version = "0.2"
+@@ -89,7 +89,7 @@ version = "0.2"
+ version = "1.5.2"
+ 
+ [dependencies.pbkdf2]
+-version = "0.8"
++version = "0.10"
+ features = ["hmac"]
+ default-features = false
+ 
+@@ -110,7 +110,7 @@ features = ["derive"]
+ version = "1.0"
+ 
+ [dependencies.sha-1]
+-version = "0.9"
++version = "0.10"
+ 
+ [dependencies.shannon]
+ version = "0.2.0"
+diff --git a/src/connection/handshake.rs b/src/connection/handshake.rs
+index eddcd32..26a1ec6 100644
+--- a/src/connection/handshake.rs
++++ b/src/connection/handshake.rs
+@@ -1,5 +1,5 @@
+ use byteorder::{BigEndian, ByteOrder, WriteBytesExt};
+-use hmac::{Hmac, Mac, NewMac};
++use hmac::{Hmac, Mac};
+ use protobuf::{self, Message};
+ use rand::{thread_rng, RngCore};
+ use sha1::Sha1;
+-- 
+2.41.0
+
