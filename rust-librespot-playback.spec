@@ -13,6 +13,8 @@ License:        MIT
 URL:            https://crates.io/crates/librespot-playback
 Source:         %{crates_source}
 
+Patch0: 0001-Update-alsa-version-and-remove-jack-backend.patch
+
 BuildRequires:  cargo-rpm-macros >= 24
 
 %global _description %{expand:
@@ -141,30 +143,6 @@ use the "gstreamer-backend" feature of the "%{crate}" crate.
 %files       -n %{name}+gstreamer-backend-devel
 %ghost %{crate_instdir}/Cargo.toml
 
-%package     -n %{name}+jack-devel
-Summary:        %{summary}
-BuildArch:      noarch
-
-%description -n %{name}+jack-devel %{_description}
-
-This package contains library source intended for building other packages which
-use the "jack" feature of the "%{crate}" crate.
-
-%files       -n %{name}+jack-devel
-%ghost %{crate_instdir}/Cargo.toml
-
-%package     -n %{name}+jackaudio-backend-devel
-Summary:        %{summary}
-BuildArch:      noarch
-
-%description -n %{name}+jackaudio-backend-devel %{_description}
-
-This package contains library source intended for building other packages which
-use the "jackaudio-backend" feature of the "%{crate}" crate.
-
-%files       -n %{name}+jackaudio-backend-devel
-%ghost %{crate_instdir}/Cargo.toml
-
 %package     -n %{name}+libpulse-binding-devel
 Summary:        %{summary}
 BuildArch:      noarch
@@ -247,18 +225,6 @@ This package contains library source intended for building other packages which
 use the "rodio-backend" feature of the "%{crate}" crate.
 
 %files       -n %{name}+rodio-backend-devel
-%ghost %{crate_instdir}/Cargo.toml
-
-%package     -n %{name}+rodiojack-backend-devel
-Summary:        %{summary}
-BuildArch:      noarch
-
-%description -n %{name}+rodiojack-backend-devel %{_description}
-
-This package contains library source intended for building other packages which
-use the "rodiojack-backend" feature of the "%{crate}" crate.
-
-%files       -n %{name}+rodiojack-backend-devel
 %ghost %{crate_instdir}/Cargo.toml
 
 %package     -n %{name}+sdl-backend-devel

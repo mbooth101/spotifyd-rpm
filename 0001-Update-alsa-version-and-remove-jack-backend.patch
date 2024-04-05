@@ -1,0 +1,53 @@
+From 74e585453a2cda496c43d4e450b21ae02dc517b3 Mon Sep 17 00:00:00 2001
+From: Mat Booth <mat.booth@gmail.com>
+Date: Fri, 5 Apr 2024 11:32:14 +0100
+Subject: [PATCH] Update alsa version and remove jack backend
+
+---
+ Cargo.toml | 11 +----------
+ 1 file changed, 1 insertion(+), 10 deletions(-)
+
+diff --git a/Cargo.toml b/Cargo.toml
+index 3731986..f32c940 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -19,7 +19,7 @@ license = "MIT"
+ repository = "https://github.com/librespot-org/librespot"
+ 
+ [dependencies.alsa]
+-version = "0.6"
++version = "0.8.1"
+ optional = true
+ 
+ [dependencies.byteorder]
+@@ -53,10 +53,6 @@ optional = true
+ version = "0.18"
+ optional = true
+ 
+-[dependencies.jack]
+-version = "0.10"
+-optional = true
+-
+ [dependencies.lewton]
+ version = "0.10"
+ 
+@@ -133,7 +129,6 @@ gstreamer-backend = [
+     "gstreamer-audio",
+     "glib",
+ ]
+-jackaudio-backend = ["jack"]
+ portaudio-backend = ["portaudio-rs"]
+ pulseaudio-backend = [
+     "libpulse-binding",
+@@ -143,8 +138,4 @@ rodio-backend = [
+     "rodio",
+     "cpal",
+ ]
+-rodiojack-backend = [
+-    "rodio",
+-    "cpal/jack",
+-]
+ sdl-backend = ["sdl2"]
+-- 
+2.41.0
+
