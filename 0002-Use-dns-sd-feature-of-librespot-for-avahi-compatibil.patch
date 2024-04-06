@@ -1,0 +1,24 @@
+From 9b8785f5693675b727deac7d33e80916dc26236f Mon Sep 17 00:00:00 2001
+From: Mat Booth <mat.booth@gmail.com>
+Date: Sat, 6 Apr 2024 10:13:38 +0100
+Subject: [PATCH 2/2] Use dns-sd feature of librespot for avahi compatibility
+
+---
+ Cargo.toml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Cargo.toml b/Cargo.toml
+index b06620d..f745f4f 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -99,6 +99,7 @@ default-features = false
+ 
+ [dependencies.librespot-connect]
+ version = "0.4"
++features = ["with-dns-sd"]
+ 
+ [dependencies.librespot-core]
+ version = "0.4"
+-- 
+2.41.0
+

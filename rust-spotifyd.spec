@@ -11,13 +11,16 @@ Summary:        Spotify daemon
 License:        GPL-3.0-only
 URL:            https://crates.io/crates/spotifyd
 Source:         %{crates_source}
+Source:         spotifyd.conf
 # Automatically generated patch to strip dependencies and normalize metadata
 Patch:          spotifyd-fix-metadata-auto.diff
 
 Patch: 0001-Update-alsa-version.patch
+Patch: 0002-Use-dns-sd-feature-of-librespot-for-avahi-compatibil.patch
 
 BuildRequires:  cargo-rpm-macros >= 24
 BuildRequires:  systemd-rpm-macros
+BuildRequires:  pkgconfig(libdns_sd)
 
 %global _description %{expand:
 A Spotify daemon.}
@@ -50,6 +53,7 @@ License:        # FIXME
 %doc README.md
 %{_bindir}/%{crate}
 %{_unitdir}/%{crate}.service
+%config(noreplace) %{_sysconfdir}/%{crate}.conf
 
 %prep
 %autosetup -n %{crate}-%{version} -p1
@@ -66,7 +70,8 @@ License:        # FIXME
 %install
 %cargo_install
 
-install -m664 -D -t %{buildroot}%{_unitdir} contrib/%{crate}.service
+install -m644 -D -t %{buildroot}%{_unitdir} contrib/%{crate}.service
+install -m644 -D -t %{buildroot}%{_sysconfdir} %{SOURCE1}
 
 %if %{with check}
 %check
