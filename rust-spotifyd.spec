@@ -29,20 +29,19 @@ A Spotify daemon.}
 
 %package     -n %{crate}
 Summary:        %{summary}
-# FIXME: paste output of %%cargo_license_summary here
-License:        # FIXME
+License:        0BSD OR MIT OR Apache-2.0 AND Apache-2.0 AND Apache-2.0 OR BSL-1.0 AND Apache-2.0 OR MIT AND Apache-2.0 WITH LLVM-exception OR Apache-2.0 OR MIT AND BSD-2-Clause AND BSD-3-Clause AND GPL-3.0-only AND LGPL-3.0 OR MPL-2.0 AND MIT AND MIT OR Apache-2.0 OR Zlib AND MIT OR BSD-3-Clause AND Unlicense OR MIT
 # LICENSE.dependencies contains a full license breakdown
 
 %description -n %{crate} %{_description}
 
 %post -n %{crate}
-%systemd_post %{crate}.service
+%systemd_user_post %{crate}.service
 
 %preun -n %{crate}
-%systemd_preun %{crate}.service
+%systemd_user_preun %{crate}.service
 
 %postun -n %{crate}
-%systemd_postun_with_restart %{crate}.service
+%systemd_user_postun_with_restart %{crate}.service
 
 %files       -n %{crate}
 %license LICENSE
@@ -52,7 +51,7 @@ License:        # FIXME
 %doc CONTRIBUTORS.md
 %doc README.md
 %{_bindir}/%{crate}
-%{_unitdir}/%{crate}.service
+%{_userunitdir}/%{crate}.service
 %config(noreplace) %{_sysconfdir}/%{crate}.conf
 
 %prep
@@ -70,7 +69,7 @@ License:        # FIXME
 %install
 %cargo_install
 
-install -m644 -D -t %{buildroot}%{_unitdir} contrib/%{crate}.service
+install -m644 -D -t %{buildroot}%{_userunitdir} contrib/%{crate}.service
 install -m644 -D -t %{buildroot}%{_sysconfdir} %{SOURCE1}
 
 %if %{with check}
