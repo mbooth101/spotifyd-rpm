@@ -1,0 +1,17 @@
+[Unit]
+Description=Spotify Client System Daemon
+Documentation=https://docs.spotifyd.rs/
+Wants=sound.target
+After=sound.target
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+ExecStart=/usr/bin/spotifyd --no-daemon
+Restart=always
+RestartSec=12
+User=spotifyd
+ProtectSystem=yes
+
+[Install]
+WantedBy=default.target

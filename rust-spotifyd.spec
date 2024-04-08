@@ -5,13 +5,22 @@
 
 Name:           rust-spotifyd
 Version:        0.3.5
-Release:        %autorelease
-Summary:        Spotify daemon
+Release:        4%{?dist}
+Summary:        Spotify client daemon
 
 License:        GPL-3.0-only
 URL:            https://crates.io/crates/spotifyd
 Source:         %{crates_source}
+# Systemd unit specifications
+Source:         spotifyd-system.service
+Source:         spotifyd-user.service
+# Service configuration
 Source:         spotifyd.conf
+# User/Group allocation
+Source:         spotifyd.sysusers
+# Firewall rules
+Source:         spotify-connect.xml
+
 # Automatically generated patch to strip dependencies and normalize metadata
 Patch:          spotifyd-fix-metadata-auto.diff
 
@@ -20,10 +29,11 @@ Patch: 0002-Use-dns-sd-feature-of-librespot-for-avahi-compatibil.patch
 
 BuildRequires:  cargo-rpm-macros >= 24
 BuildRequires:  systemd-rpm-macros
+BuildRequires:  firewalld-filesystem
 BuildRequires:  pkgconfig(libdns_sd)
 
 %global _description %{expand:
-A Spotify daemon.}
+An open source Spotify client running as a UNIX daemon.}
 
 %description %{_description}
 
@@ -32,15 +42,25 @@ Summary:        %{summary}
 License:        0BSD OR MIT OR Apache-2.0 AND Apache-2.0 AND Apache-2.0 OR BSL-1.0 AND Apache-2.0 OR MIT AND Apache-2.0 WITH LLVM-exception OR Apache-2.0 OR MIT AND BSD-2-Clause AND BSD-3-Clause AND GPL-3.0-only AND LGPL-3.0 OR MPL-2.0 AND MIT AND MIT OR Apache-2.0 OR Zlib AND MIT OR BSD-3-Clause AND Unlicense OR MIT
 # LICENSE.dependencies contains a full license breakdown
 
+Requires: firewalld-filesystem
+%{?sysusers_requires_compat}
+
 %description -n %{crate} %{_description}
 
+%pre -n %{crate}
+%sysusers_create_compat %{SOURCE4}
+
 %post -n %{crate}
+%systemd_post %{crate}.service
 %systemd_user_post %{crate}.service
+%firewalld_reload
 
 %preun -n %{crate}
+%systemd_preun %{crate}.service
 %systemd_user_preun %{crate}.service
 
 %postun -n %{crate}
+%systemd_postun_with_restart %{crate}.service
 %systemd_user_postun_with_restart %{crate}.service
 
 %files       -n %{crate}
@@ -51,8 +71,11 @@ License:        0BSD OR MIT OR Apache-2.0 AND Apache-2.0 AND Apache-2.0 OR BSL-1
 %doc CONTRIBUTORS.md
 %doc README.md
 %{_bindir}/%{crate}
+%{_unitdir}/%{crate}.service
 %{_userunitdir}/%{crate}.service
 %config(noreplace) %{_sysconfdir}/%{crate}.conf
+%{_sysusersdir}/%{crate}.conf
+%{_prefix}/lib/firewalld/services/spotify-connect.xml
 
 %prep
 %autosetup -n %{crate}-%{version} -p1
@@ -69,8 +92,11 @@ License:        0BSD OR MIT OR Apache-2.0 AND Apache-2.0 AND Apache-2.0 OR BSL-1
 %install
 %cargo_install
 
-install -m644 -D -t %{buildroot}%{_userunitdir} contrib/%{crate}.service
-install -m644 -D -t %{buildroot}%{_sysconfdir} %{SOURCE1}
+install -Dm 0644 %{SOURCE1} %{buildroot}%{_unitdir}/%{crate}.service
+install -Dm 0644 %{SOURCE2} %{buildroot}%{_userunitdir}/%{crate}.service
+install -Dm 0644 %{SOURCE3} %{buildroot}%{_sysconfdir}/%{crate}.conf
+install -Dm 0644 %{SOURCE4} %{buildroot}%{_sysusersdir}/%{crate}.conf
+install -Dm 0644 %{SOURCE5} %{buildroot}%{_prefix}/lib/firewalld/services/spotify-connect.xml
 
 %if %{with check}
 %check
@@ -78,4 +104,17 @@ install -m644 -D -t %{buildroot}%{_sysconfdir} %{SOURCE1}
 %endif
 
 %changelog
-%autochangelog
+* Mon Apr 08 2024 Mat Booth <mat.booth@gmail.com> - 0.3.5-4
+- Create a system user and allow running as a system service
+- Add firewall rules
+
+* Mon Apr 08 2024 Mat Booth <mat.booth@gmail.com> - 0.3.5-3
+- Fix licenses and install unit as user service as designed
+
+* Mon Apr 08 2024 Mat Booth <mat.booth@gmail.com> - 0.3.5-2
+- Use avahi instead of embedded mdns service
+- Install a config file
+
+* Mon Apr 08 2024 Mat Booth <mat.booth@gmail.com> - 0.3.5-1
+- Initial package
+
