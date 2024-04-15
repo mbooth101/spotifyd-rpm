@@ -1,7 +1,7 @@
 From c02215d0e486e01ce3d282426f8c8b67831cdab2 Mon Sep 17 00:00:00 2001
 From: Mat Booth <mat.booth@gmail.com>
 Date: Fri, 5 Apr 2024 12:57:50 +0100
-Subject: [PATCH 1/2] Update alsa version
+Subject: [PATCH 1/5] Update alsa version
 
 ---
  Cargo.toml | 2 +-

@@ -5,7 +5,7 @@
 
 Name:           rust-spotifyd
 Version:        0.3.5
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Spotify client daemon
 
 License:        GPL-3.0-only
@@ -26,6 +26,11 @@ Patch:          spotifyd-fix-metadata-auto.diff
 
 Patch: 0001-Update-alsa-version.patch
 Patch: 0002-Use-dns-sd-feature-of-librespot-for-avahi-compatibil.patch
+Patch: 0003-Update-rspotify-version.patch
+
+# These are taken from upstream unreleased master branch
+Patch: 0004-dbus_mpris-update-Duration-calls-and-add-Market.patch
+Patch: 0005-dbus_mpris-use-chrono-duration-for-seek-math.patch
 
 BuildRequires:  cargo-rpm-macros >= 24
 BuildRequires:  systemd-rpm-macros
@@ -82,15 +87,15 @@ Requires: firewalld-filesystem
 %cargo_prep
 
 %generate_buildrequires
-%cargo_generate_buildrequires
+%cargo_generate_buildrequires -f dbus_mpris
 
 %build
-%cargo_build
+%cargo_build -f dbus_mpris
 %{cargo_license_summary}
 %{cargo_license} > LICENSE.dependencies
 
 %install
-%cargo_install
+%cargo_install -f dbus_mpris
 
 install -Dm 0644 %{SOURCE1} %{buildroot}%{_unitdir}/%{crate}.service
 install -Dm 0644 %{SOURCE2} %{buildroot}%{_userunitdir}/%{crate}.service
@@ -104,6 +109,9 @@ install -Dm 0644 %{SOURCE5} %{buildroot}%{_prefix}/lib/firewalld/services/spotif
 %endif
 
 %changelog
+* Mon Apr 15 2024 Mat Booth <mat.booth@gmail.com> - 0.3.5-5
+- Enable MPRIS interface
+
 * Mon Apr 08 2024 Mat Booth <mat.booth@gmail.com> - 0.3.5-4
 - Create a system user and allow running as a system service
 - Add firewall rules

@@ -1,7 +1,7 @@
 From 9b8785f5693675b727deac7d33e80916dc26236f Mon Sep 17 00:00:00 2001
 From: Mat Booth <mat.booth@gmail.com>
 Date: Sat, 6 Apr 2024 10:13:38 +0100
-Subject: [PATCH 2/2] Use dns-sd feature of librespot for avahi compatibility
+Subject: [PATCH 2/5] Use dns-sd feature of librespot for avahi compatibility
 
 ---
  Cargo.toml | 1 +
