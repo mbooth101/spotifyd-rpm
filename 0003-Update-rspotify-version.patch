@@ -16,7 +16,7 @@ index f745f4f..9d60e65 100644
  
  [dependencies.rspotify]
 -version = "0.11.6"
-+version = "0.12.0"
++version = "0.13.0"
  features = [
      "client-ureq",
      "ureq-rustls-tls",

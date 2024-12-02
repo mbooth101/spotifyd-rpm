@@ -5,7 +5,7 @@
 
 Name:           rust-spotifyd
 Version:        0.3.5
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Spotify client daemon
 
 License:        GPL-3.0-only
@@ -109,6 +109,9 @@ install -Dm 0644 %{SOURCE5} %{buildroot}%{_prefix}/lib/firewalld/services/spotif
 %endif
 
 %changelog
+* Mon Dec 02 2024 Mat Booth <mat.booth@gmail.com> - 0.3.5-6
+- Bump rspotify and alsa versions
+
 * Mon Apr 15 2024 Mat Booth <mat.booth@gmail.com> - 0.3.5-5
 - Enable MPRIS interface
 
