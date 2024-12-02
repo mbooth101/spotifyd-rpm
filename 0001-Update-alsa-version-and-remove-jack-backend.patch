@@ -16,7 +16,7 @@ index 3731986..f32c940 100644
  
  [dependencies.alsa]
 -version = "0.6"
-+version = "0.8.1"
++version = "0.9.1"
  optional = true
  
  [dependencies.byteorder]
