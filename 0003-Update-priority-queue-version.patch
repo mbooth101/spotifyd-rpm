@@ -1,4 +1,4 @@
-From 277b7cf69b8f1a754aa3eb88eafe1815c778cc93 Mon Sep 17 00:00:00 2001
+From 98ead6700e18ade94d62d662c9a1389c8fc47c24 Mon Sep 17 00:00:00 2001
 From: Mat Booth <mat.booth@gmail.com>
 Date: Mon, 2 Dec 2024 12:29:00 +0000
 Subject: [PATCH 3/3] Update priority-queue version
@@ -8,7 +8,7 @@ Subject: [PATCH 3/3] Update priority-queue version
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/Cargo.toml b/Cargo.toml
-index 104e3bc..83ab818 100644
+index ac0083d..836ae31 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
 @@ -94,7 +94,7 @@ features = ["hmac"]

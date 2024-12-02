@@ -1,15 +1,16 @@
-From 1a2cc69104cb9fca114f0e3208346057a48a37b1 Mon Sep 17 00:00:00 2001
+From a9d390a0a1db1438fe3848dc2974b48cfbc014b4 Mon Sep 17 00:00:00 2001
 From: Mat Booth <mat.booth@gmail.com>
 Date: Thu, 4 Apr 2024 16:12:32 +0100
 Subject: [PATCH 2/3] Update hmac, sha1, pbkdf2 versions
 
 ---
  Cargo.toml                  | 6 +++---
+ src/authentication.rs       | 5 ++---
  src/connection/handshake.rs | 2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ 3 files changed, 6 insertions(+), 7 deletions(-)
 
 diff --git a/Cargo.toml b/Cargo.toml
-index ebedc0d..104e3bc 100644
+index ebedc0d..ac0083d 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
 @@ -49,7 +49,7 @@ features = [
@@ -26,7 +27,7 @@ index ebedc0d..104e3bc 100644
  
  [dependencies.pbkdf2]
 -version = "0.8"
-+version = "0.10"
++version = "0.12"
  features = ["hmac"]
  default-features = false
  
@@ -39,6 +40,29 @@ index ebedc0d..104e3bc 100644
  
  [dependencies.shannon]
  version = "0.2.0"
+diff --git a/src/authentication.rs b/src/authentication.rs
+index 353dc3a..7131b8b 100644
+--- a/src/authentication.rs
++++ b/src/authentication.rs
+@@ -2,8 +2,7 @@ use std::io::{self, Read};
+ 
+ use aes::{Aes192, BlockDecrypt};
+ use byteorder::{BigEndian, ByteOrder};
+-use hmac::Hmac;
+-use pbkdf2::pbkdf2;
++use pbkdf2::pbkdf2_hmac;
+ use protobuf::ProtobufEnum;
+ use serde::{Deserialize, Serialize};
+ use sha1::{Digest, Sha1};
+@@ -77,7 +76,7 @@ impl Credentials {
+ 
+         let key = {
+             let mut key = [0u8; 24];
+-            pbkdf2::<Hmac<Sha1>>(&secret, username.as_bytes(), 0x100, &mut key[0..20]);
++            pbkdf2_hmac::<Sha1>(&secret, username.as_bytes(), 0x100, &mut key[0..20]);
+ 
+             let hash = &Sha1::digest(&key[..20]);
+             key[..20].copy_from_slice(hash);
 diff --git a/src/connection/handshake.rs b/src/connection/handshake.rs
 index eddcd32..26a1ec6 100644
 --- a/src/connection/handshake.rs
