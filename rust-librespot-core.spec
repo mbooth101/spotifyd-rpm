@@ -17,6 +17,7 @@ BuildRequires:  cargo-rpm-macros >= 24
 
 Patch0: 0001-Update-aes-version.patch
 Patch1: 0002-Update-hmac-sha1-pbkdf2-versions.patch
+Patch2: 0003-Update-priority-queue-version.patch
 
 %global _description %{expand:
 The core functionality provided by librespot.}

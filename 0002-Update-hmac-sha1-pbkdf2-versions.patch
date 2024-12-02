@@ -1,7 +1,7 @@
-From 2fceef2cb6c62dc7307bb5e6232cecc1041c03d6 Mon Sep 17 00:00:00 2001
+From 1a2cc69104cb9fca114f0e3208346057a48a37b1 Mon Sep 17 00:00:00 2001
 From: Mat Booth <mat.booth@gmail.com>
 Date: Thu, 4 Apr 2024 16:12:32 +0100
-Subject: [PATCH 2/2] Update hmac, sha1, pbkdf2 versions
+Subject: [PATCH 2/3] Update hmac, sha1, pbkdf2 versions
 
 ---
  Cargo.toml                  | 6 +++---
@@ -51,5 +51,5 @@ index eddcd32..26a1ec6 100644
  use rand::{thread_rng, RngCore};
  use sha1::Sha1;
 -- 
-2.41.0
+2.47.0
 
