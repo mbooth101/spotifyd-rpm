@@ -14,7 +14,8 @@ URL:            https://crates.io/crates/librespot-discovery
 Source:         %{crates_source}
 
 Patch0: 0001-Update-aes-version.patch
-Patch1: 0002-Remove-dep-on-simple_logger.patch
+Patch1: 0002-Update-hmac-and-sha1-versions.patch
+Patch2: 0003-Remove-dep-on-simple_logger.patch
 
 BuildRequires:  cargo-rpm-macros >= 24
 

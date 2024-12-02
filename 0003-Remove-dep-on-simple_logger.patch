@@ -1,7 +1,7 @@
-From 9e61226934623d2f646dc97b5b2a254c2527bcfc Mon Sep 17 00:00:00 2001
+From 494926f449f88f2c0f9fca12b7ba32ca0cb2d264 Mon Sep 17 00:00:00 2001
 From: Mat Booth <mat.booth@gmail.com>
 Date: Thu, 4 Apr 2024 23:55:43 +0100
-Subject: [PATCH 2/2] Remove dep on simple_logger
+Subject: [PATCH 3/3] Remove dep on simple_logger
 
 ---
  Cargo.toml            |  3 ---
@@ -10,7 +10,7 @@ Subject: [PATCH 2/2] Remove dep on simple_logger
  delete mode 100644 examples/discovery.rs
 
 diff --git a/Cargo.toml b/Cargo.toml
-index ffac104..4226a4d 100644
+index 5cba65e..80e1ef9 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
 @@ -81,9 +81,6 @@ version = "0.3"
@@ -55,5 +55,5 @@ index cd913fd..0000000
 -    }
 -}
 -- 
-2.41.0
+2.47.0
 
