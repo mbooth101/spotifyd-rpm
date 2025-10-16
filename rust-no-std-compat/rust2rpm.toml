@@ -1,0 +1,2 @@
+[package]
+summary = "Compatibility layer that will make porting your crate to no_std easy"
