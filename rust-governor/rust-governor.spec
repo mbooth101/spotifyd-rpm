@@ -145,6 +145,11 @@ use the "std" feature of the "%{crate}" crate.
 
 %prep
 %autosetup -n %{crate}-%{version} -p1
+
+# Fix erroneous execute bits
+chmod -x src/state/direct/streams.rs src/state/keyed/dashmap.rs src/lib.rs
+chmod -x tests/future.rs tests/keyed_dashmap.rs tests/memory_leaks.rs tests/sinks.rs tests/streams.rs
+
 %cargo_prep
 
 %generate_buildrequires
