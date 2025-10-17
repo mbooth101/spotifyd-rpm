@@ -6,12 +6,14 @@
 
 Name:           rust-hyper-proxy2
 Version:        0.1.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Proxy connector for Hyper-based applications
 
 License:        MIT
 URL:            https://crates.io/crates/hyper-proxy2
 Source:         %{crates_source}
+# Manually created patch for downstream crate metadata changes
+Patch:          hyper-proxy2-fix-metadata.diff
 
 BuildRequires:  cargo-rpm-macros >= 24
 
@@ -245,5 +247,8 @@ use the "webpki-roots" feature of the "%{crate}" crate.
 %endif
 
 %changelog
+* Fri Oct 17 2025 Mat Booth <mat.booth@gmail.com> - 0.1.0-2
+- Patch dependency on hyper-rustls
+
 * Fri Oct 17 2025 Mat Booth <mat.booth@gmail.com> - 0.1.0-1
 - Initial package
