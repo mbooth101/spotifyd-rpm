@@ -1,2 +1,5 @@
 [package]
 summary = "Compatibility layer that will make porting your crate to no_std easy"
+
+[features]
+hide = [ "compat_hash", "hashbrown", "compat_sync", "spin" ]

@@ -6,7 +6,7 @@
 
 Name:           rust-no-std-compat
 Version:        0.4.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Compatibility layer that will make porting your crate to no_std easy
 
 License:        MIT
@@ -59,18 +59,6 @@ use the "alloc" feature of the "%{crate}" crate.
 %files       -n %{name}+alloc-devel
 %ghost %{crate_instdir}/Cargo.toml
 
-%package     -n %{name}+compat_hash-devel
-Summary:        %{summary}
-BuildArch:      noarch
-
-%description -n %{name}+compat_hash-devel %{_description}
-
-This package contains library source intended for building other packages which
-use the "compat_hash" feature of the "%{crate}" crate.
-
-%files       -n %{name}+compat_hash-devel
-%ghost %{crate_instdir}/Cargo.toml
-
 %package     -n %{name}+compat_macros-devel
 Summary:        %{summary}
 BuildArch:      noarch
@@ -81,42 +69,6 @@ This package contains library source intended for building other packages which
 use the "compat_macros" feature of the "%{crate}" crate.
 
 %files       -n %{name}+compat_macros-devel
-%ghost %{crate_instdir}/Cargo.toml
-
-%package     -n %{name}+compat_sync-devel
-Summary:        %{summary}
-BuildArch:      noarch
-
-%description -n %{name}+compat_sync-devel %{_description}
-
-This package contains library source intended for building other packages which
-use the "compat_sync" feature of the "%{crate}" crate.
-
-%files       -n %{name}+compat_sync-devel
-%ghost %{crate_instdir}/Cargo.toml
-
-%package     -n %{name}+hashbrown-devel
-Summary:        %{summary}
-BuildArch:      noarch
-
-%description -n %{name}+hashbrown-devel %{_description}
-
-This package contains library source intended for building other packages which
-use the "hashbrown" feature of the "%{crate}" crate.
-
-%files       -n %{name}+hashbrown-devel
-%ghost %{crate_instdir}/Cargo.toml
-
-%package     -n %{name}+spin-devel
-Summary:        %{summary}
-BuildArch:      noarch
-
-%description -n %{name}+spin-devel %{_description}
-
-This package contains library source intended for building other packages which
-use the "spin" feature of the "%{crate}" crate.
-
-%files       -n %{name}+spin-devel
 %ghost %{crate_instdir}/Cargo.toml
 
 %package     -n %{name}+std-devel
@@ -162,5 +114,8 @@ use the "unstable" feature of the "%{crate}" crate.
 %endif
 
 %changelog
+* Fri Oct 17 2025 Mat Booth <mat.booth@gmail.com> - 0.4.1-2
+- Drop unneeded subpackages
+
 * Thu Oct 16 2025 Mat Booth <mat.booth@gmail.com> - 0.4.1-1
 - Initial package
