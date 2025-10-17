@@ -1,0 +1,13 @@
+[features]
+hide = [ "no_std" ]
+
+[tests]
+run = "none"
+comments = [ "Tests disabled due to missing dependencies" ]
+
+[scripts.prep]
+pre = [
+	"# Fix erroneous execute bits",
+	"chmod -x src/state/direct/streams.rs src/state/keyed/dashmap.rs src/lib.rs",
+	"chmod -x tests/future.rs tests/keyed_dashmap.rs tests/memory_leaks.rs tests/sinks.rs tests/streams.rs"
+]
