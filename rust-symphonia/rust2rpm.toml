@@ -1,0 +1,2 @@
+[features]
+hide = [ "aac", "symphonia-codec-aac", "alac", "symphonia-codec-alac", "caf", "symphonia-format-caf", "isomp4", "symphonia-format-isomp4", "all", "all-codecs", "all-formats" ]
