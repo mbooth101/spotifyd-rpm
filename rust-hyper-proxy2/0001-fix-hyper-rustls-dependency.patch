@@ -1,0 +1,25 @@
+From d0bb7eb8d346002a5074a8b759ec41c411171560 Mon Sep 17 00:00:00 2001
+From: Mat Booth <mat.booth@gmail.com>
+Date: Sat, 18 Oct 2025 14:05:04 +0100
+Subject: [PATCH] fix hyper-rustls dependency
+
+---
+ Cargo.toml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Cargo.toml b/Cargo.toml
+index ea94fa2..808e1b2 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -50,7 +50,7 @@ version = "1.0"
+ features = ["client"]
+ 
+ [dependencies.hyper-rustls]
+-version = "0.26.0"
++version = "0.25.0"
+ optional = true
+ 
+ [dependencies.hyper-tls]
+-- 
+2.51.0
+

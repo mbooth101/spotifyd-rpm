@@ -6,14 +6,15 @@
 
 Name:           rust-hyper-proxy2
 Version:        0.1.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Proxy connector for Hyper-based applications
 
 License:        MIT
 URL:            https://crates.io/crates/hyper-proxy2
 Source:         %{crates_source}
-# Manually created patch for downstream crate metadata changes
-Patch:          hyper-proxy2-fix-metadata.diff
+# * Downgrade to hyper-rustls 0.25 due to compile errors with the latest version
+#   that Fedora has
+Patch10:        0001-fix-hyper-rustls-dependency.patch
 
 BuildRequires:  cargo-rpm-macros >= 24
 
@@ -247,6 +248,9 @@ use the "webpki-roots" feature of the "%{crate}" crate.
 %endif
 
 %changelog
+* Sat Oct 18 2025 Mat Booth <mat.booth@gmail.com> - 0.1.0-3
+- Downgrade hyper-rustls dep in rust-hyper-proxy2
+
 * Fri Oct 17 2025 Mat Booth <mat.booth@gmail.com> - 0.1.0-2
 - Patch dependency on hyper-rustls
 
