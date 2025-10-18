@@ -1,0 +1,51 @@
+From 368ec707272c5fb9c1f2853b54033bd64b03e16f Mon Sep 17 00:00:00 2001
+From: Mat Booth <mat.booth@gmail.com>
+Date: Sat, 18 Oct 2025 11:47:34 +0100
+Subject: [PATCH 2/3] fix tungstenite dependency
+
+---
+ Cargo.toml        | 2 +-
+ src/dealer/mod.rs | 7 +++++--
+ 2 files changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/Cargo.toml b/Cargo.toml
+index f2eb929..742b2a1 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -204,7 +204,7 @@ features = [
+ version = "0.1"
+ 
+ [dependencies.tokio-tungstenite]
+-version = "0.24"
++version = "0.26"
+ features = ["rustls-tls-native-roots"]
+ default-features = false
+ 
+diff --git a/src/dealer/mod.rs b/src/dealer/mod.rs
+index 8969f31..3b87cec 100644
+--- a/src/dealer/mod.rs
++++ b/src/dealer/mod.rs
+@@ -78,7 +78,7 @@ impl Responder {
+         })
+         .to_string();
+ 
+-        if let Err(e) = self.tx.send(WsMessage::Text(response)) {
++        if let Err(e) = self.tx.send(WsMessage::Text(response.into())) {
+             warn!("Wasn't able to reply to dealer request: {}", e);
+         }
+     }
+@@ -517,7 +517,10 @@ async fn connect(
+                 timer.tick().await;
+ 
+                 pong_received.store(false, atomic::Ordering::Relaxed);
+-                if send_tx.send(WsMessage::Ping(vec![])).is_err() {
++                if send_tx
++                    .send(WsMessage::Ping(bytes::Bytes::default()))
++                    .is_err()
++                {
+                     // The sender is closed.
+                     break;
+                 }
+-- 
+2.51.0
+

@@ -1,0 +1,12 @@
+[[package.extra-patches]]
+number = 10
+file = "0001-fix-sysinfo-dependency.patch"
+comments = [ "Upgrade sysinfo to a version that is available in Fedora" ]
+[[package.extra-patches]]
+number = 11
+file = "0002-fix-tungstenite-dependency.patch"
+comments = [ "Backport change from upstream for newer tungstenite version" ]
+[[package.extra-patches]]
+number = 12
+file = "0003-fix-vergen-dependency.patch"
+comments = [ "Downgrade vergen to 8 because that's what Fedora has" ]
