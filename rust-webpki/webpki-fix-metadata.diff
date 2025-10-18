@@ -1,0 +1,20 @@
+--- webpki-0.22.4/Cargo.toml	1970-01-01T00:00:01+00:00
++++ webpki-0.22.4/Cargo.toml	2025-10-18T08:58:12.093138+00:00
+@@ -38,7 +38,7 @@
+     "cryptography",
+     "no-std",
+ ]
+-license-file = "LICENSE"
++license = "ISC"
+ repository = "https://github.com/briansmith/webpki"
+ 
+ [package.metadata.docs.rs]
+@@ -71,7 +71,7 @@
+ version = "0.9"
+ 
+ [dev-dependencies.base64]
+-version = "0.9.1"
++version = "0.13"
+ 
+ [dev-dependencies.serde]
+ version = "1.0"
