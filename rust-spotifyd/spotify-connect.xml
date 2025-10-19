@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<service>
+  <short>Spotify Connect</short>
+  <description>The Spotify playing daemon is configured by default to offer its services on this port. Enable this option if this machine is to be used as a Spotify Connect device.</description>
+  <port port="5907" protocol="tcp"/>
+</service>

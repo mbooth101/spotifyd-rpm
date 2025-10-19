@@ -1,0 +1,25 @@
+From a2a661149591871856eea67342e2a6c26072c68b Mon Sep 17 00:00:00 2001
+From: Mat Booth <mat.booth@gmail.com>
+Date: Mon, 15 Apr 2024 17:38:36 +0100
+Subject: [PATCH 3/5] Update rspotify version
+
+---
+ Cargo.toml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Cargo.toml b/Cargo.toml
+index f745f4f..9d60e65 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -115,7 +115,7 @@ default-features = false
+ version = "0.4.6"
+ 
+ [dependencies.rspotify]
+-version = "0.11.6"
++version = "0.13.0"
+ features = [
+     "client-ureq",
+     "ureq-rustls-tls",
+-- 
+2.41.0
+

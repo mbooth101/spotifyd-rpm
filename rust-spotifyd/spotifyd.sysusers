@@ -1,0 +1,2 @@
+u spotifyd - "Spotify System Daemon" /var/lib /usr/sbin/nologin
+m spotifyd audio
