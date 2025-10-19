@@ -1,0 +1,5 @@
+[features]
+hide = ["jack", "jackaudio-backend", "sdl2", "sdl-backend",
+	"rodio", "cpal", "rodio-backend", "rodiojack-backend",
+	"portaudio-rs", "portaudio-backend",
+	"ogg", "passthrough-decoder" ]
