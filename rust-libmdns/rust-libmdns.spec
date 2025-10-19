@@ -6,12 +6,16 @@
 
 Name:           rust-libmdns
 Version:        0.9.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        MDNS Responder library for building discoverable LAN services in Rust
 
 License:        MIT
 URL:            https://crates.io/crates/libmdns
 Source:         %{crates_source}
+# * Relax version requirement on hostname dependency
+Patch10:        0001-relax-hostname-version.patch
+# * Relax version requirement on multimap dependency
+Patch11:        0002-relax-multimap-version.patch
 
 BuildRequires:  cargo-rpm-macros >= 24
 
@@ -65,5 +69,8 @@ use the "default" feature of the "%{crate}" crate.
 %endif
 
 %changelog
+* Sun Oct 19 2025 Mat Booth <mat.booth@gmail.com> - 0.9.1-2
+- Relax version requirement for dependencies
+
 * Sun Oct 19 2025 Mat Booth <mat.booth@gmail.com> - 0.9.1-1
 - Update libmdns to version 0.9.1
