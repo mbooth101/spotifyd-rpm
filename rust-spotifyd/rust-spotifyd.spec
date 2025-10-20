@@ -5,7 +5,7 @@
 
 Name:           rust-spotifyd
 Version:        0.4.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Spotify daemon
 
 License:        GPL-3.0-only
@@ -69,6 +69,7 @@ Requires: firewalld-filesystem
 %doc CONTRIBUTORS.md
 %doc README.md
 %{_bindir}/spotifyd
+%dir %attr(700,spotifyd,spotifyd) %{_localstatedir}/cache/%{crate}
 %{_unitdir}/%{crate}.service
 %{_userunitdir}/%{crate}.service
 %config(noreplace) %{_sysconfdir}/%{crate}.conf
@@ -90,6 +91,7 @@ Requires: firewalld-filesystem
 %install
 %cargo_install -f dbus_mpris
 
+install -dm 0700 %{buildroot}%{_localstatedir}/cache/%{crate}
 install -Dm 0644 %{SOURCE1} %{buildroot}%{_unitdir}/%{crate}.service
 install -Dm 0644 %{SOURCE2} %{buildroot}%{_userunitdir}/%{crate}.service
 install -Dm 0644 %{SOURCE3} %{buildroot}%{_sysconfdir}/%{crate}.conf
@@ -102,6 +104,9 @@ install -Dm 0644 %{SOURCE5} %{buildroot}%{_prefix}/lib/firewalld/services/spotif
 %endif
 
 %changelog
+* Mon Oct 20 2025 Mat Booth <mat.booth@gmail.com> - 0.4.1-3
+- Install a cache directory
+
 * Mon Oct 20 2025 Mat Booth <mat.booth@gmail.com> - 0.4.1-2
 - Rebuild against librespot-discovery changes
 
