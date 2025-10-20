@@ -1,0 +1,2 @@
+[features]
+hide = [ "syslog3", "syslog4", "syslog7", "syslog-3", "syslog-4", "syslog-7", "reopen03", "reopen1", "reopen-03", "reopen-1" ]
