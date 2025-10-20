@@ -1,2 +1,6 @@
 [package]
 summary = "Makes it possible to use Tokio with D-Bus"
+
+[tests]
+run = "none"
+comments = [ "Tests don't work in headless environment" ]
