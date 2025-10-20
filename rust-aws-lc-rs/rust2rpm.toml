@@ -1,0 +1,8 @@
+[tests]
+run = "none"
+comments = [ "Tests disabled due to missing dependencies" ]
+
+[[package.extra-patches]]
+number = 10
+file = "0001-bump-version-of-untrusted-dependency.patch"
+comments = [ "Use version of this dependency that is shipped by Fedora" ]
