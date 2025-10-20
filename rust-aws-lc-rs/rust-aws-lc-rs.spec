@@ -7,7 +7,7 @@
 
 Name:           rust-aws-lc-rs
 Version:        1.12.6
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Cryptographic library using AWS-LC for its cryptographic operations
 
 License:        ISC AND (Apache-2.0 OR ISC)
@@ -15,6 +15,8 @@ URL:            https://crates.io/crates/aws-lc-rs
 Source:         %{crates_source}
 # * Use version of this dependency that is shipped by Fedora
 Patch10:        0001-bump-version-of-untrusted-dependency.patch
+# * Remove dependency on the FIPS variant of the implementation
+Patch11:        0002-remove-dep-on-fips-variant.patch
 
 BuildRequires:  cargo-rpm-macros >= 24
 
@@ -97,18 +99,6 @@ This package contains library source intended for building other packages which
 use the "bindgen" feature of the "%{crate}" crate.
 
 %files       -n %{name}+bindgen-devel
-%ghost %{crate_instdir}/Cargo.toml
-
-%package     -n %{name}+fips-devel
-Summary:        %{summary}
-BuildArch:      noarch
-
-%description -n %{name}+fips-devel %{_description}
-
-This package contains library source intended for building other packages which
-use the "fips" feature of the "%{crate}" crate.
-
-%files       -n %{name}+fips-devel
 %ghost %{crate_instdir}/Cargo.toml
 
 %package     -n %{name}+non-fips-devel
@@ -202,5 +192,8 @@ use the "unstable" feature of the "%{crate}" crate.
 %endif
 
 %changelog
+* Mon Oct 20 2025 Mat Booth <mat.booth@gmail.com> - 1.12.6-2
+- Remove dependency on the FIPS variant of the implementation library
+
 * Mon Oct 20 2025 Mat Booth <mat.booth@gmail.com> - 1.12.6-1
 - Initial package
