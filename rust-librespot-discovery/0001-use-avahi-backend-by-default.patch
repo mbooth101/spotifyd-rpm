@@ -1,0 +1,25 @@
+From f913b2e6a84f1f390f6b9c46366c4a9c53625d68 Mon Sep 17 00:00:00 2001
+From: Mat Booth <mat.booth@gmail.com>
+Date: Mon, 20 Oct 2025 21:23:21 +0100
+Subject: [PATCH] use avahi backend by default
+
+---
+ Cargo.toml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Cargo.toml b/Cargo.toml
+index b55b43e..08d73f6 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -140,7 +140,7 @@ features = [
+ ]
+ 
+ [features]
+-default = ["with-libmdns"]
++default = ["with-avahi"]
+ with-avahi = [
+     "zbus",
+     "serde",
+-- 
+2.51.0
+

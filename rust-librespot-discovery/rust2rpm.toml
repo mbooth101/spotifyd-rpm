@@ -1,0 +1,4 @@
+[[package.extra-patches]]
+number = 10
+file = "0001-use-avahi-backend-by-default.patch"
+comments = [ "Switch to avahi backend by default instead of embedded libmdns implementation" ]

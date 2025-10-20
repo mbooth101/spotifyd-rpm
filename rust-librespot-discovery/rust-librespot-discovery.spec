@@ -6,12 +6,15 @@
 
 Name:           rust-librespot-discovery
 Version:        0.6.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Discovery logic for librespot
 
 License:        MIT
 URL:            https://crates.io/crates/librespot-discovery
 Source:         %{crates_source}
+# * Switch to avahi backend by default instead of embedded libmdns
+#   implementation
+Patch10:        0001-use-avahi-backend-by-default.patch
 
 BuildRequires:  cargo-rpm-macros >= 24
 
@@ -148,5 +151,8 @@ use the "zbus" feature of the "%{crate}" crate.
 %endif
 
 %changelog
+* Mon Oct 20 2025 Mat Booth <mat.booth@gmail.com> - 0.6.0-2
+- Switch to avahi backend by default
+
 * Sun Oct 19 2025 Mat Booth <mat.booth@gmail.com> - 0.6.0-1
 - Initial package
