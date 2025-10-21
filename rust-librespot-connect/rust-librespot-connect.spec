@@ -5,9 +5,9 @@
 %global crate librespot-connect
 
 Name:           rust-librespot-connect
-Version:        0.6.0
+Version:        0.7.1
 Release:        1%{?dist}
-Summary:        Discovery and Spotify Connect logic for librespot
+Summary:        Spotify Connect logic for librespot
 
 License:        MIT
 URL:            https://crates.io/crates/librespot-connect
@@ -16,7 +16,7 @@ Source:         %{crates_source}
 BuildRequires:  cargo-rpm-macros >= 24
 
 %global _description %{expand:
-The discovery and Spotify Connect logic for librespot.}
+The Spotify Connect logic for librespot.}
 
 %description %{_description}
 
@@ -31,6 +31,7 @@ use the "%{crate}" crate.
 
 %files          devel
 # FIXME: no license files detected
+%doc %{crate_instdir}/README.md
 %{crate_instdir}/
 
 %package     -n %{name}+default-devel
@@ -43,6 +44,42 @@ This package contains library source intended for building other packages which
 use the "default" feature of the "%{crate}" crate.
 
 %files       -n %{name}+default-devel
+%ghost %{crate_instdir}/Cargo.toml
+
+%package     -n %{name}+native-tls-devel
+Summary:        %{summary}
+BuildArch:      noarch
+
+%description -n %{name}+native-tls-devel %{_description}
+
+This package contains library source intended for building other packages which
+use the "native-tls" feature of the "%{crate}" crate.
+
+%files       -n %{name}+native-tls-devel
+%ghost %{crate_instdir}/Cargo.toml
+
+%package     -n %{name}+rustls-tls-native-roots-devel
+Summary:        %{summary}
+BuildArch:      noarch
+
+%description -n %{name}+rustls-tls-native-roots-devel %{_description}
+
+This package contains library source intended for building other packages which
+use the "rustls-tls-native-roots" feature of the "%{crate}" crate.
+
+%files       -n %{name}+rustls-tls-native-roots-devel
+%ghost %{crate_instdir}/Cargo.toml
+
+%package     -n %{name}+rustls-tls-webpki-roots-devel
+Summary:        %{summary}
+BuildArch:      noarch
+
+%description -n %{name}+rustls-tls-webpki-roots-devel %{_description}
+
+This package contains library source intended for building other packages which
+use the "rustls-tls-webpki-roots" feature of the "%{crate}" crate.
+
+%files       -n %{name}+rustls-tls-webpki-roots-devel
 %ghost %{crate_instdir}/Cargo.toml
 
 %prep
@@ -64,5 +101,8 @@ use the "default" feature of the "%{crate}" crate.
 %endif
 
 %changelog
+* Tue Oct 21 2025 Mat Booth <mat.booth@gmail.com> - 0.7.1-1
+- Update to latest released version
+
 * Sun Oct 19 2025 Mat Booth <mat.booth@gmail.com> - 0.6.0-1
 - Initial package
