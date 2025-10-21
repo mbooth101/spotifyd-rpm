@@ -5,7 +5,7 @@
 %global crate oauth2
 
 Name:           rust-oauth2
-Version:        4.4.2
+Version:        5.0.0
 Release:        1%{?dist}
 Summary:        Extensible, strongly-typed implementation of OAuth2
 
@@ -14,8 +14,8 @@ URL:            https://crates.io/crates/oauth2
 Source:         %{crates_source}
 # Automatically generated patch to strip dependencies and normalize metadata
 Patch:          oauth2-fix-metadata-auto.diff
-# Manually created patch for downstream crate metadata changes
-Patch:          oauth2-fix-metadata.diff
+# * Patch out requirement on missing dependency wasmbind
+Patch10:        0001-remove-dep-on-wasmbind.patch
 
 BuildRequires:  cargo-rpm-macros >= 24
 
@@ -37,6 +37,7 @@ use the "%{crate}" crate.
 %license %{crate_instdir}/LICENSE-APACHE
 %license %{crate_instdir}/LICENSE-MIT
 %doc %{crate_instdir}/README.md
+%doc %{crate_instdir}/UPGRADE.md
 %{crate_instdir}/
 
 %package     -n %{name}+default-devel
@@ -99,6 +100,18 @@ use the "reqwest" feature of the "%{crate}" crate.
 %files       -n %{name}+reqwest-devel
 %ghost %{crate_instdir}/Cargo.toml
 
+%package     -n %{name}+reqwest-blocking-devel
+Summary:        %{summary}
+BuildArch:      noarch
+
+%description -n %{name}+reqwest-blocking-devel %{_description}
+
+This package contains library source intended for building other packages which
+use the "reqwest-blocking" feature of the "%{crate}" crate.
+
+%files       -n %{name}+reqwest-blocking-devel
+%ghost %{crate_instdir}/Cargo.toml
+
 %package     -n %{name}+rustls-tls-devel
 Summary:        %{summary}
 BuildArch:      noarch
@@ -109,6 +122,18 @@ This package contains library source intended for building other packages which
 use the "rustls-tls" feature of the "%{crate}" crate.
 
 %files       -n %{name}+rustls-tls-devel
+%ghost %{crate_instdir}/Cargo.toml
+
+%package     -n %{name}+timing-resistant-secret-traits-devel
+Summary:        %{summary}
+BuildArch:      noarch
+
+%description -n %{name}+timing-resistant-secret-traits-devel %{_description}
+
+This package contains library source intended for building other packages which
+use the "timing-resistant-secret-traits" feature of the "%{crate}" crate.
+
+%files       -n %{name}+timing-resistant-secret-traits-devel
 %ghost %{crate_instdir}/Cargo.toml
 
 %package     -n %{name}+ureq-devel
@@ -142,5 +167,8 @@ use the "ureq" feature of the "%{crate}" crate.
 %endif
 
 %changelog
+* Tue Oct 21 2025 Mat Booth <mat.booth@gmail.com> - 5.0.0-1
+- Update to version 5
+
 * Sat Oct 18 2025 Mat Booth <mat.booth@gmail.com> - 4.4.2-1
 - Initial package

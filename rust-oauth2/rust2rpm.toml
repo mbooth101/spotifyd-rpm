@@ -1,0 +1,4 @@
+[[package.extra-patches]]
+number = 10
+file = "0001-remove-dep-on-wasmbind.patch"
+comments = [ "Patch out requirement on missing dependency wasmbind" ]

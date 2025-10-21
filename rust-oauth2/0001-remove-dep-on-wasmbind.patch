@@ -1,0 +1,24 @@
+From ac1f64191e4f97505dd35c03744480d83d628ecb Mon Sep 17 00:00:00 2001
+From: Mat Booth <mat.booth@gmail.com>
+Date: Tue, 21 Oct 2025 10:15:35 +0100
+Subject: [PATCH] remove dep on wasmbind
+
+---
+ Cargo.toml | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/Cargo.toml b/Cargo.toml
+index 8f4d47a..b2b7b7c 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -60,7 +60,6 @@ features = [
+     "clock",
+     "serde",
+     "std",
+-    "wasmbind",
+ ]
+ default-features = false
+ 
+-- 
+2.51.0
+
