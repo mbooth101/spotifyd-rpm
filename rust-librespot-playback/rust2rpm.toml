@@ -1,5 +1,7 @@
 [features]
-hide = ["jack", "jackaudio-backend", "sdl2", "sdl-backend",
-	"rodio", "cpal", "rodio-backend", "rodiojack-backend",
-	"portaudio-rs", "portaudio-backend",
-	"ogg", "passthrough-decoder" ]
+hide = ["jackaudio-backend", "sdl-backend", "rodio-backend", "rodiojack-backend", "portaudio-backend", "gstreamer-backend", "passthrough-decoder" ]
+
+[[package.extra-patches]]
+number = 10
+file = "0001-switch-to-alsa-backend-by-default.patch"
+comments = [ "Switch to using alsa backend by default" ]

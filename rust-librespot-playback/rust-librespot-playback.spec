@@ -5,13 +5,15 @@
 %global crate librespot-playback
 
 Name:           rust-librespot-playback
-Version:        0.6.0
+Version:        0.7.1
 Release:        1%{?dist}
 Summary:        Audio playback logic for librespot
 
 License:        MIT
 URL:            https://crates.io/crates/librespot-playback
 Source:         %{crates_source}
+# * Switch to using alsa backend by default
+Patch10:        0001-switch-to-alsa-backend-by-default.patch
 
 BuildRequires:  cargo-rpm-macros >= 24
 
@@ -45,18 +47,6 @@ use the "default" feature of the "%{crate}" crate.
 %files       -n %{name}+default-devel
 %ghost %{crate_instdir}/Cargo.toml
 
-%package     -n %{name}+alsa-devel
-Summary:        %{summary}
-BuildArch:      noarch
-
-%description -n %{name}+alsa-devel %{_description}
-
-This package contains library source intended for building other packages which
-use the "alsa" feature of the "%{crate}" crate.
-
-%files       -n %{name}+alsa-devel
-%ghost %{crate_instdir}/Cargo.toml
-
 %package     -n %{name}+alsa-backend-devel
 Summary:        %{summary}
 BuildArch:      noarch
@@ -69,88 +59,16 @@ use the "alsa-backend" feature of the "%{crate}" crate.
 %files       -n %{name}+alsa-backend-devel
 %ghost %{crate_instdir}/Cargo.toml
 
-%package     -n %{name}+glib-devel
+%package     -n %{name}+native-tls-devel
 Summary:        %{summary}
 BuildArch:      noarch
 
-%description -n %{name}+glib-devel %{_description}
+%description -n %{name}+native-tls-devel %{_description}
 
 This package contains library source intended for building other packages which
-use the "glib" feature of the "%{crate}" crate.
+use the "native-tls" feature of the "%{crate}" crate.
 
-%files       -n %{name}+glib-devel
-%ghost %{crate_instdir}/Cargo.toml
-
-%package     -n %{name}+gstreamer-devel
-Summary:        %{summary}
-BuildArch:      noarch
-
-%description -n %{name}+gstreamer-devel %{_description}
-
-This package contains library source intended for building other packages which
-use the "gstreamer" feature of the "%{crate}" crate.
-
-%files       -n %{name}+gstreamer-devel
-%ghost %{crate_instdir}/Cargo.toml
-
-%package     -n %{name}+gstreamer-app-devel
-Summary:        %{summary}
-BuildArch:      noarch
-
-%description -n %{name}+gstreamer-app-devel %{_description}
-
-This package contains library source intended for building other packages which
-use the "gstreamer-app" feature of the "%{crate}" crate.
-
-%files       -n %{name}+gstreamer-app-devel
-%ghost %{crate_instdir}/Cargo.toml
-
-%package     -n %{name}+gstreamer-audio-devel
-Summary:        %{summary}
-BuildArch:      noarch
-
-%description -n %{name}+gstreamer-audio-devel %{_description}
-
-This package contains library source intended for building other packages which
-use the "gstreamer-audio" feature of the "%{crate}" crate.
-
-%files       -n %{name}+gstreamer-audio-devel
-%ghost %{crate_instdir}/Cargo.toml
-
-%package     -n %{name}+gstreamer-backend-devel
-Summary:        %{summary}
-BuildArch:      noarch
-
-%description -n %{name}+gstreamer-backend-devel %{_description}
-
-This package contains library source intended for building other packages which
-use the "gstreamer-backend" feature of the "%{crate}" crate.
-
-%files       -n %{name}+gstreamer-backend-devel
-%ghost %{crate_instdir}/Cargo.toml
-
-%package     -n %{name}+libpulse-binding-devel
-Summary:        %{summary}
-BuildArch:      noarch
-
-%description -n %{name}+libpulse-binding-devel %{_description}
-
-This package contains library source intended for building other packages which
-use the "libpulse-binding" feature of the "%{crate}" crate.
-
-%files       -n %{name}+libpulse-binding-devel
-%ghost %{crate_instdir}/Cargo.toml
-
-%package     -n %{name}+libpulse-simple-binding-devel
-Summary:        %{summary}
-BuildArch:      noarch
-
-%description -n %{name}+libpulse-simple-binding-devel %{_description}
-
-This package contains library source intended for building other packages which
-use the "libpulse-simple-binding" feature of the "%{crate}" crate.
-
-%files       -n %{name}+libpulse-simple-binding-devel
+%files       -n %{name}+native-tls-devel
 %ghost %{crate_instdir}/Cargo.toml
 
 %package     -n %{name}+pulseaudio-backend-devel
@@ -163,6 +81,30 @@ This package contains library source intended for building other packages which
 use the "pulseaudio-backend" feature of the "%{crate}" crate.
 
 %files       -n %{name}+pulseaudio-backend-devel
+%ghost %{crate_instdir}/Cargo.toml
+
+%package     -n %{name}+rustls-tls-native-roots-devel
+Summary:        %{summary}
+BuildArch:      noarch
+
+%description -n %{name}+rustls-tls-native-roots-devel %{_description}
+
+This package contains library source intended for building other packages which
+use the "rustls-tls-native-roots" feature of the "%{crate}" crate.
+
+%files       -n %{name}+rustls-tls-native-roots-devel
+%ghost %{crate_instdir}/Cargo.toml
+
+%package     -n %{name}+rustls-tls-webpki-roots-devel
+Summary:        %{summary}
+BuildArch:      noarch
+
+%description -n %{name}+rustls-tls-webpki-roots-devel %{_description}
+
+This package contains library source intended for building other packages which
+use the "rustls-tls-webpki-roots" feature of the "%{crate}" crate.
+
+%files       -n %{name}+rustls-tls-webpki-roots-devel
 %ghost %{crate_instdir}/Cargo.toml
 
 %prep
@@ -184,5 +126,8 @@ use the "pulseaudio-backend" feature of the "%{crate}" crate.
 %endif
 
 %changelog
+* Tue Oct 21 2025 Mat Booth <mat.booth@gmail.com> - 0.7.1-1
+- Update to latest released version
+
 * Sun Oct 19 2025 Mat Booth <mat.booth@gmail.com> - 0.6.0-1
 - Initial package

@@ -1,0 +1,34 @@
+From 5bcca906a6d4b6f427025430c64cb50845ac147f Mon Sep 17 00:00:00 2001
+From: Mat Booth <mat.booth@gmail.com>
+Date: Tue, 21 Oct 2025 14:00:10 +0100
+Subject: [PATCH] switch to alsa backend by default
+
+---
+ Cargo.toml | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Cargo.toml b/Cargo.toml
+index ef46d40..44e6dcf 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -29,7 +29,7 @@ repository = "https://github.com/librespot-org/librespot"
+ [features]
+ alsa-backend = ["dep:alsa"]
+ default = [
+-    "rodio-backend",
++    "alsa-backend",
+     "native-tls",
+ ]
+ gstreamer-backend = [
+@@ -74,7 +74,7 @@ name = "librespot_playback"
+ path = "src/lib.rs"
+ 
+ [dependencies.alsa]
+-version = "0.10"
++version = "0.9"
+ optional = true
+ 
+ [dependencies.cpal]
+-- 
+2.51.0
+
