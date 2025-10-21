@@ -5,7 +5,7 @@
 %global crate librespot-audio
 
 Name:           rust-librespot-audio
-Version:        0.6.0
+Version:        0.7.1
 Release:        1%{?dist}
 Summary:        Audio fetching logic for librespot
 
@@ -45,6 +45,42 @@ use the "default" feature of the "%{crate}" crate.
 %files       -n %{name}+default-devel
 %ghost %{crate_instdir}/Cargo.toml
 
+%package     -n %{name}+native-tls-devel
+Summary:        %{summary}
+BuildArch:      noarch
+
+%description -n %{name}+native-tls-devel %{_description}
+
+This package contains library source intended for building other packages which
+use the "native-tls" feature of the "%{crate}" crate.
+
+%files       -n %{name}+native-tls-devel
+%ghost %{crate_instdir}/Cargo.toml
+
+%package     -n %{name}+rustls-tls-native-roots-devel
+Summary:        %{summary}
+BuildArch:      noarch
+
+%description -n %{name}+rustls-tls-native-roots-devel %{_description}
+
+This package contains library source intended for building other packages which
+use the "rustls-tls-native-roots" feature of the "%{crate}" crate.
+
+%files       -n %{name}+rustls-tls-native-roots-devel
+%ghost %{crate_instdir}/Cargo.toml
+
+%package     -n %{name}+rustls-tls-webpki-roots-devel
+Summary:        %{summary}
+BuildArch:      noarch
+
+%description -n %{name}+rustls-tls-webpki-roots-devel %{_description}
+
+This package contains library source intended for building other packages which
+use the "rustls-tls-webpki-roots" feature of the "%{crate}" crate.
+
+%files       -n %{name}+rustls-tls-webpki-roots-devel
+%ghost %{crate_instdir}/Cargo.toml
+
 %prep
 %autosetup -n %{crate}-%{version} -p1
 %cargo_prep
@@ -64,5 +100,8 @@ use the "default" feature of the "%{crate}" crate.
 %endif
 
 %changelog
+* Tue Oct 21 2025 Mat Booth <mat.booth@gmail.com> - 0.7.1-1
+- Update to latest released version
+
 * Fri Oct 17 2025 Mat Booth <mat.booth@gmail.com> - 0.6.0-1
 - Initial package
