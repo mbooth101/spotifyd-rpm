@@ -1,8 +1,0 @@
-[[package.extra-patches]]
-number = 10
-file = "0001-relax-hostname-version.patch"
-comments = [ "Relax version requirement on hostname dependency" ]
-[[package.extra-patches]]
-number = 11
-file = "0002-relax-multimap-version.patch"
-comments = [ "Relax version requirement on multimap dependency" ]

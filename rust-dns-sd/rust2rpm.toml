@@ -1,2 +1,0 @@
-[requires]
-build = [ "pkgconfig(libdns_sd)" ]
