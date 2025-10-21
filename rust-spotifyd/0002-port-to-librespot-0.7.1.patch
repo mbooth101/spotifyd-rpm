@@ -1,0 +1,743 @@
+From 18181c6900e5574ffc0440f4332f3c4ff5a4c477 Mon Sep 17 00:00:00 2001
+From: Mat Booth <mat.booth@gmail.com>
+Date: Tue, 21 Oct 2025 14:44:35 +0100
+Subject: [PATCH 2/2] port to librespot 0.7.1
+
+---
+ Cargo.toml        |  16 ++---
+ src/alsa_mixer.rs |   6 +-
+ src/config.rs     |  26 ++++----
+ src/dbus_mpris.rs | 148 +++++++++++++++++++++++-----------------------
+ src/error.rs      |  24 +-------
+ src/main.rs       |   4 +-
+ src/main_loop.rs  |  21 +++----
+ src/no_mixer.rs   |   4 +-
+ src/oauth.rs      |  16 +++--
+ src/process.rs    |  20 ++++++-
+ src/setup.rs      |  14 +++--
+ src/utils.rs      |   5 +-
+ 12 files changed, 158 insertions(+), 146 deletions(-)
+
+diff --git a/Cargo.toml b/Cargo.toml
+index 78628c5..c129a2d 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -124,30 +124,30 @@ version = "0.4"
+ version = "0.2.82"
+ 
+ [dependencies.librespot-audio]
+-version = "0.6"
++version = "0.7.1"
+ default-features = false
+ 
+ [dependencies.librespot-connect]
+-version = "0.6"
++version = "0.7.1"
+ 
+ [dependencies.librespot-core]
+-version = "0.6"
++version = "0.7.1"
+ 
+ [dependencies.librespot-discovery]
+-version = "0.6"
++version = "0.7.1"
+ 
+ [dependencies.librespot-metadata]
+-version = "0.6"
++version = "0.7.1"
+ 
+ [dependencies.librespot-oauth]
+-version = "0.6"
++version = "0.7.1"
+ 
+ [dependencies.librespot-playback]
+-version = "0.6"
++version = "0.7.1"
+ default-features = false
+ 
+ [dependencies.librespot-protocol]
+-version = "0.6"
++version = "0.7.1"
+ 
+ [dependencies.log]
+ version = "0.4.6"
+diff --git a/src/alsa_mixer.rs b/src/alsa_mixer.rs
+index ed7f1b7..6e32d6d 100644
+--- a/src/alsa_mixer.rs
++++ b/src/alsa_mixer.rs
+@@ -36,12 +36,12 @@ impl AlsaMixer {
+ }
+ 
+ impl Mixer for AlsaMixer {
+-    fn open(_: MixerConfig) -> AlsaMixer {
+-        AlsaMixer {
++    fn open(_: MixerConfig) -> Result<AlsaMixer, librespot_core::Error> {
++        Ok(AlsaMixer {
+             device: "default".to_string(),
+             mixer: "Master".to_string(),
+             linear_scaling: false,
+-        }
++        })
+     }
+ 
+     fn volume(&self) -> u16 {
+diff --git a/src/config.rs b/src/config.rs
+index 263bfee..8a19055 100644
+--- a/src/config.rs
++++ b/src/config.rs
+@@ -1,11 +1,11 @@
+ use crate::utils;
+ use clap::{
+-    builder::{IntoResettable, PossibleValuesParser, TypedValueParser, ValueParser},
+     Args, Parser, Subcommand, ValueEnum,
++    builder::{IntoResettable, PossibleValuesParser, TypedValueParser, ValueParser},
+ };
+ use color_eyre::{
+-    eyre::{bail, Context},
+     Report,
++    eyre::{Context, bail},
+ };
+ use directories::ProjectDirs;
+ use gethostname::gethostname;
+@@ -13,12 +13,12 @@ use librespot_core::{cache::Cache, config::DeviceType as LSDeviceType, config::S
+ use librespot_playback::{
+     audio_backend,
+     config::{AudioFormat as LSAudioFormat, Bitrate as LSBitrate, PlayerConfig},
+-    dither::{mk_ditherer, DithererBuilder, TriangularDitherer},
++    dither::{DithererBuilder, TriangularDitherer, mk_ditherer},
+ };
+ use log::{debug, error, info, warn};
+ use serde::{
+-    de::{self, Error, Unexpected},
+     Deserialize, Deserializer,
++    de::{self, Error, Unexpected},
+ };
+ use sha1::{Digest, Sha1};
+ use std::{
+@@ -69,7 +69,6 @@ pub enum DeviceType {
+     UnknownSpotify,
+     CarThing,
+     Observer,
+-    HomeThing,
+ }
+ 
+ impl From<DeviceType> for LSDeviceType {
+@@ -93,7 +92,6 @@ impl From<DeviceType> for LSDeviceType {
+             DeviceType::UnknownSpotify => LSDeviceType::UnknownSpotify,
+             DeviceType::CarThing => LSDeviceType::CarThing,
+             DeviceType::Observer => LSDeviceType::Observer,
+-            DeviceType::HomeThing => LSDeviceType::HomeThing,
+         }
+     }
+ }
+@@ -488,10 +486,14 @@ impl CliConfig {
+             if let Some(problem) = get_known_config_problem(&path) {
+                 match problem {
+                     KnownConfigProblem::MissingFeature(feature) => {
+-                        warn!("The config key '{path}' is ignored, because the feature '{feature}' is missing in this build");
++                        warn!(
++                            "The config key '{path}' is ignored, because the feature '{feature}' is missing in this build"
++                        );
+                     }
+                     KnownConfigProblem::UsernamePassword => {
+-                        warn!("The config key '{path}' is ignored, because authentication with username and password is no longer supported by Spotify. Please use `spotifyd authenticate` instead");
++                        warn!(
++                            "The config key '{path}' is ignored, because authentication with username and password is no longer supported by Spotify. Please use `spotifyd authenticate` instead"
++                        );
+                     }
+                 }
+             } else {
+@@ -622,7 +624,7 @@ pub(crate) struct SpotifydConfig {
+     pub(crate) audio_device: Option<String>,
+     pub(crate) audio_format: LSAudioFormat,
+     pub(crate) volume_controller: VolumeController,
+-    pub(crate) initial_volume: Option<u16>,
++    pub(crate) initial_volume: u16,
+     pub(crate) device_name: String,
+     pub(crate) player_config: PlayerConfig,
+     pub(crate) session_config: SessionConfig,
+@@ -671,7 +673,8 @@ pub(crate) fn get_internal_config(config: CliConfig) -> SpotifydConfig {
+         .volume_controller
+         .unwrap_or(VolumeController::SoftVolume);
+ 
+-    let initial_volume: Option<u16> = config
++    let default_initial_volume = 90;
++    let initial_volume: u16 = config
+         .shared_config
+         .initial_volume
+         .filter(|val| {
+@@ -682,7 +685,8 @@ pub(crate) fn get_internal_config(config: CliConfig) -> SpotifydConfig {
+                 false
+             }
+         })
+-        .map(|volume| (volume as i32 * (u16::MAX as i32) / 100) as u16);
++        .map(|volume| (volume as i32 * (u16::MAX as i32) / 100) as u16)
++        .unwrap_or((default_initial_volume * (u16::MAX as i32) / 100) as u16);
+ 
+     let device_name = config
+         .shared_config
+diff --git a/src/dbus_mpris.rs b/src/dbus_mpris.rs
+index ad84aa8..b34cc3b 100644
+--- a/src/dbus_mpris.rs
++++ b/src/dbus_mpris.rs
+@@ -1,24 +1,23 @@
+ use crate::config::DBusType;
+-use chrono::{prelude::*, Duration};
++use chrono::{Duration, prelude::*};
+ use dbus::{
++    MethodErr,
+     arg::{RefArg, Variant},
+     channel::{MatchingReceiver, Sender},
+     message::{MatchRule, SignalArgs},
+     nonblock::stdintf::org_freedesktop_dbus::PropertiesPropertiesChanged,
+-    MethodErr,
+ };
+ use dbus_crossroads::{Crossroads, IfaceToken};
+ use dbus_tokio::connection::{self, IOResourceError};
+ use futures::{
+-    task::{Context, Poll},
+     Future,
++    task::{Context, Poll},
+ };
+-use librespot_connect::spirc::{Spirc, SpircLoadCommand};
+-use librespot_core::{spotify_id::SpotifyItemType, Session, SpotifyId};
++use librespot_connect::{LoadContextOptions, LoadRequest, LoadRequestOptions, Spirc};
++use librespot_core::{Session, SpotifyId, spotify_id::SpotifyItemType};
+ use librespot_metadata::audio::AudioItem;
+ use librespot_playback::player::PlayerEvent;
+-use librespot_protocol::spirc::TrackRef;
+-use log::{debug, error, warn};
++use log::{debug, error, info, warn};
+ use std::convert::TryFrom;
+ use std::{
+     collections::HashMap,
+@@ -30,8 +29,8 @@ use time::format_description::well_known::Iso8601;
+ use tokio::{
+     runtime::Handle,
+     sync::{
+-        mpsc::{UnboundedReceiver, UnboundedSender},
+         Mutex,
++        mpsc::{UnboundedReceiver, UnboundedSender},
+     },
+ };
+ 
+@@ -140,7 +139,7 @@ impl Position {
+ #[derive(Clone, Copy, Debug)]
+ enum RepeatState {
+     None,
+-    // Track,
++    Track,
+     All,
+ }
+ 
+@@ -148,25 +147,37 @@ impl RepeatState {
+     fn to_mpris(self) -> &'static str {
+         match self {
+             RepeatState::None => "None",
+-            // RepeatState::Track => "Track",
++            RepeatState::Track => "Track",
+             RepeatState::All => "Playlist",
+         }
+     }
++
++    fn track_repeat(self) -> bool {
++        match self {
++            RepeatState::Track => true,
++            _ => false,
++        }
++    }
+ }
+ 
+ impl From<RepeatState> for bool {
+     fn from(repeat: RepeatState) -> Self {
+         match repeat {
+             RepeatState::None => false,
++            RepeatState::Track => true,
+             RepeatState::All => true,
+         }
+     }
+ }
+ 
+-impl From<bool> for RepeatState {
+-    fn from(repeat: bool) -> Self {
+-        if repeat {
+-            RepeatState::All
++impl From<(bool, bool)> for RepeatState {
++    fn from((context, track): (bool, bool)) -> Self {
++        if context {
++            if track {
++                RepeatState::Track
++            } else {
++                RepeatState::All
++            }
+         } else {
+             RepeatState::None
+         }
+@@ -273,8 +284,8 @@ impl CurrentStateInner {
+                 self.shuffle = shuffle;
+                 insert_attr(&mut changed, "Shuffle", self.shuffle);
+             }
+-            PlayerEvent::RepeatChanged { repeat } => {
+-                self.repeat = repeat.into();
++            PlayerEvent::RepeatChanged { context, track } => {
++                self.repeat = (context, track).into();
+                 insert_attr(
+                     &mut changed,
+                     "LoopStatus",
+@@ -294,6 +305,9 @@ impl CurrentStateInner {
+             | PlayerEvent::SessionConnected { .. }
+             | PlayerEvent::SessionDisconnected { .. }
+             | PlayerEvent::SessionClientChanged { .. } => (),
++            PlayerEvent::PositionChanged { position_ms, .. } => {
++                self.update_position(Duration::milliseconds(position_ms as i64));
++            }
+         }
+ 
+         (changed, seeked)
+@@ -386,11 +400,13 @@ impl CurrentState {
+         Self(RwLock::new(inner))
+     }
+ 
+-    fn read(&self) -> Result<std::sync::RwLockReadGuard<CurrentStateInner>, StatePoisonError> {
++    fn read(&self) -> Result<std::sync::RwLockReadGuard<'_, CurrentStateInner>, StatePoisonError> {
+         self.0.read().map_err(|_| StatePoisonError)
+     }
+ 
+-    fn write(&self) -> Result<std::sync::RwLockWriteGuard<CurrentStateInner>, StatePoisonError> {
++    fn write(
++        &self,
++    ) -> Result<std::sync::RwLockWriteGuard<'_, CurrentStateInner>, StatePoisonError> {
+         self.0.write().map_err(|_| StatePoisonError)
+     }
+ }
+@@ -640,7 +656,10 @@ fn register_player_interface(
+         });
+         let local_spirc = spirc.clone();
+         b.method("Stop", (), (), move |_, _, (): ()| {
+-            local_spirc.disconnect().map_err(|e| MethodErr::failed(&e))
++            let pause_playback = false;
++            local_spirc
++                .disconnect(pause_playback)
++                .map_err(|e| MethodErr::failed(&e))
+         });
+ 
+         let local_spirc = spirc.clone();
+@@ -708,56 +727,21 @@ fn register_player_interface(
+                 shuffle, repeat, ..
+             } = *local_state.read()?;
+ 
+-            fn id_to_trackref(id: &SpotifyId) -> TrackRef {
+-                let mut trackref = TrackRef::new();
+-                if let Ok(uri) = id.to_uri() {
+-                    trackref.set_uri(uri);
+-                } else {
+-                    trackref.set_gid(id.to_raw().to_vec());
+-                }
+-                trackref
+-            }
+-
+             let session = session.clone();
+ 
+-            let (playing_track_index, context_uri, tracks) = Handle::current()
++            let (playing_track_index, context_uri) = Handle::current()
+                 .block_on(async move {
+                     use librespot_metadata::*;
+                     Ok::<_, librespot_core::Error>(match id.item_type {
+-                        SpotifyItemType::Album => {
+-                            let album = Album::get(&session, &id).await?;
+-                            (0, uri, album.tracks().map(id_to_trackref).collect())
+-                        }
+-                        SpotifyItemType::Artist => {
+-                            let artist = Artist::get(&session, &id).await?;
+-                            (
+-                                0,
+-                                uri,
+-                                artist
+-                                    .top_tracks
+-                                    .for_country(&session.country())
+-                                    .iter()
+-                                    .map(id_to_trackref)
+-                                    .collect(),
+-                            )
+-                        }
+-                        SpotifyItemType::Playlist => {
+-                            let playlist = Playlist::get(&session, &id).await?;
+-                            (0, uri, playlist.tracks().map(id_to_trackref).collect())
+-                        }
++                        SpotifyItemType::Album => (0, uri),
++                        SpotifyItemType::Artist => (0, uri),
++                        SpotifyItemType::Playlist => (0, uri),
+                         SpotifyItemType::Track => {
+                             let track = Track::get(&session, &id).await?;
+-                            (
+-                                track.number as u32,
+-                                track.album.id.to_uri()?,
+-                                vec![id_to_trackref(&track.id)],
+-                            )
+-                        }
+-                        SpotifyItemType::Episode => (0, uri, vec![id_to_trackref(&id)]),
+-                        SpotifyItemType::Show => {
+-                            let show = Show::get(&session, &id).await?;
+-                            (0, uri, show.episodes.iter().map(id_to_trackref).collect())
++                            (track.number as u32, track.album.id.to_uri()?)
+                         }
++                        SpotifyItemType::Episode => (0, uri),
++                        SpotifyItemType::Show => (0, uri),
+                         SpotifyItemType::Local | SpotifyItemType::Unknown => {
+                             return Err(librespot_core::Error::unimplemented(
+                                 "this type of uri is not supported",
+@@ -768,14 +752,23 @@ fn register_player_interface(
+                 .map_err(|e| MethodErr::failed(&e))?;
+ 
+             local_spirc
+-                .load(SpircLoadCommand {
++                .load(LoadRequest::from_context_uri(
+                     context_uri,
+-                    start_playing: true,
+-                    shuffle,
+-                    repeat: repeat.into(),
+-                    playing_track_index,
+-                    tracks,
+-                })
++                    LoadRequestOptions {
++                        start_playing: true,
++                        seek_to: 0,
++                        context_options: Some(LoadContextOptions::Options(
++                            librespot_connect::Options {
++                                shuffle,
++                                repeat: repeat.into(),
++                                repeat_track: repeat.track_repeat(),
++                            },
++                        )),
++                        playing_track: Some(librespot_connect::PlayingTrack::Index(
++                            playing_track_index,
++                        )),
++                    },
++                ))
+                 .map_err(|e| MethodErr::failed(&e))
+         });
+ 
+@@ -829,20 +822,25 @@ fn register_player_interface(
+                 Ok(repeat.to_mpris().to_string())
+             })
+             .set(move |_, _, value| {
+-                let new_repeat = match value.as_str() {
+-                    "None" => false,
+-                    "Playlist" => true,
++                let repeat = match value.as_str() {
++                    "None" => RepeatState::None,
++                    "Playlist" => RepeatState::All,
++                    "Track" => RepeatState::Track,
+                     mode => {
+                         return Err(dbus::MethodErr::failed(&format!(
+                             "unsupported repeat mode: {mode}"
+-                        )))
++                        )));
+                     }
+                 };
++
+                 local_spirc
+-                    .repeat(new_repeat)
++                    .repeat(repeat.into())
+                     .map_err(|e| MethodErr::failed(&e))?;
+-                // TODO: remove, once librespot sends us updates here
+-                Ok(Some(value))
++                local_spirc
++                    .repeat_track(repeat.track_repeat())
++                    .map_err(|e| MethodErr::failed(&e))?;
++
++                Ok(None)
+             });
+ 
+         let local_state = current_state.clone();
+diff --git a/src/error.rs b/src/error.rs
+index 408465c..e8e8abb 100644
+--- a/src/error.rs
++++ b/src/error.rs
+@@ -1,22 +1,4 @@
+-use std::{
+-    error::Error as StdError,
+-    fmt::{self, Display},
+-};
+-
+-#[derive(Clone, Debug)]
+-pub struct ParseError(String);
+-
+-impl fmt::Display for ParseError {
+-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+-        write!(f, "failed to parse config entry: {}", self.0)
+-    }
+-}
+-
+-impl StdError for ParseError {
+-    fn source(&self) -> Option<&(dyn StdError + 'static)> {
+-        None
+-    }
+-}
++use std::fmt::{self, Display};
+ 
+ /// This crate's error type.
+ #[derive(Debug)]
+@@ -90,12 +72,12 @@ impl Display for ErrorKind {
+         match self {
+             ErrorKind::Subprocess { cmd, msg, shell } => match msg {
+                 Message::None => write!(f, "Failed to execute {:?} using {:?}.", cmd, shell),
+-                Message::Error(ref e) => write!(
++                Message::Error(e) => write!(
+                     f,
+                     "Failed to execute {:?} using {:?}. Error: {}",
+                     cmd, shell, e
+                 ),
+-                Message::String(ref s) => write!(
++                Message::String(s) => write!(
+                     f,
+                     "Failed to execute {:?} using {:?}. Error: {}",
+                     cmd, shell, s
+diff --git a/src/main.rs b/src/main.rs
+index 7779e40..b49d819 100644
+--- a/src/main.rs
++++ b/src/main.rs
+@@ -7,7 +7,7 @@ use config::ExecutionMode;
+ #[cfg(unix)]
+ use daemonize::Daemonize;
+ use fern::colors::ColoredLevelConfig;
+-use log::{info, trace, LevelFilter};
++use log::{LevelFilter, info, trace};
+ use oauth::run_oauth;
+ #[cfg(target_os = "openbsd")]
+ use pledge::pledge;
+@@ -176,7 +176,7 @@ fn run_daemon(mut cli_config: CliConfig) -> eyre::Result<()> {
+         #[cfg(target_os = "windows")]
+         {
+             use std::os::windows::process::CommandExt;
+-            use std::process::{exit, Command};
++            use std::process::{Command, exit};
+ 
+             let mut args = std::env::args().collect::<Vec<_>>();
+             args.remove(0);
+diff --git a/src/main_loop.rs b/src/main_loop.rs
+index 2b6871f..9edbe6f 100644
+--- a/src/main_loop.rs
++++ b/src/main_loop.rs
+@@ -9,15 +9,14 @@ use futures::future::Either;
+ #[cfg(not(feature = "dbus_mpris"))]
+ use futures::future::Pending;
+ use futures::{
+-    self,
++    self, Future, FutureExt, StreamExt,
+     future::{self, Fuse, FusedFuture},
+     stream::Peekable,
+-    Future, FutureExt, StreamExt,
+ };
+-use librespot_connect::{config::ConnectConfig, spirc::Spirc};
++use librespot_connect::{ConnectConfig, Spirc};
+ use librespot_core::{
+-    authentication::Credentials, cache::Cache, config::DeviceType, session::Session, Error,
+-    SessionConfig,
++    Error, SessionConfig, authentication::Credentials, cache::Cache, config::DeviceType,
++    session::Session,
+ };
+ use librespot_discovery::Discovery;
+ use librespot_playback::{
+@@ -82,7 +81,7 @@ pub(crate) struct MainLoop {
+     pub(crate) audio_device: Option<String>,
+     pub(crate) audio_format: AudioFormat,
+     pub(crate) has_volume_ctrl: bool,
+-    pub(crate) initial_volume: Option<u16>,
++    pub(crate) initial_volume: u16,
+     pub(crate) shell: String,
+     pub(crate) device_type: DeviceType,
+     pub(crate) device_name: String,
+@@ -101,7 +100,9 @@ struct ConnectionInfo<SpircTask: Future<Output = ()>> {
+ }
+ 
+ impl MainLoop {
+-    async fn get_connection(&mut self) -> Result<ConnectionInfo<impl Future<Output = ()>>, Error> {
++    async fn get_connection(
++        &mut self,
++    ) -> Result<ConnectionInfo<impl Future<Output = ()> + use<>>, Error> {
+         let creds = self.credentials_provider.get_credentials().await;
+ 
+         let mut connection_backoff = Backoff::default();
+@@ -124,9 +125,9 @@ impl MainLoop {
+                 ConnectConfig {
+                     name: self.device_name.clone(),
+                     device_type: self.device_type,
+-                    is_group: false,
+                     initial_volume: self.initial_volume,
+-                    has_volume_ctrl: self.has_volume_ctrl,
++                    disable_volume: self.has_volume_ctrl,
++                    ..ConnectConfig::default()
+                 },
+                 session.clone(),
+                 creds.clone(),
+@@ -141,7 +142,7 @@ impl MainLoop {
+                         session,
+                         player,
+                         spirc_task,
+-                    })
++                    });
+                 }
+                 Err(err) => {
+                     let Ok(backoff) = connection_backoff.next_backoff() else {
+diff --git a/src/no_mixer.rs b/src/no_mixer.rs
+index 6200d00..59213f2 100644
+--- a/src/no_mixer.rs
++++ b/src/no_mixer.rs
+@@ -3,8 +3,8 @@ use librespot_playback::mixer::{Mixer, MixerConfig};
+ pub struct NoMixer;
+ 
+ impl Mixer for NoMixer {
+-    fn open(_: MixerConfig) -> NoMixer {
+-        NoMixer {}
++    fn open(_: MixerConfig) -> Result<NoMixer, librespot_core::Error> {
++        Ok(NoMixer {})
+     }
+ 
+     fn volume(&self) -> u16 {
+diff --git a/src/oauth.rs b/src/oauth.rs
+index 1effeee..7093be9 100644
+--- a/src/oauth.rs
++++ b/src/oauth.rs
+@@ -1,13 +1,14 @@
+ use color_eyre::{
+-    eyre::{self, Context as _},
+     Section as _,
++    eyre::{self, Context as _},
+ };
+ use librespot_core::SessionConfig;
+-use librespot_core::{authentication::Credentials, Session};
++use librespot_core::{Session, authentication::Credentials};
++use librespot_oauth::OAuthClientBuilder;
+ use log::info;
+ use tokio::runtime::Runtime;
+ 
+-use crate::{config::CliConfig, setup_logger, LogTarget};
++use crate::{LogTarget, config::CliConfig, setup_logger};
+ 
+ pub(crate) fn run_oauth(mut cli_config: CliConfig, oauth_port: u16) -> eyre::Result<()> {
+     setup_logger(LogTarget::Terminal, cli_config.verbose)?;
+@@ -55,12 +56,17 @@ pub(crate) fn run_oauth(mut cli_config: CliConfig, oauth_port: u16) -> eyre::Res
+         ..Default::default()
+     };
+ 
+-    let token = librespot_oauth::get_access_token(
++    let oauth_client = OAuthClientBuilder::new(
+         &session_config.client_id,
+         &format!("http://127.0.0.1:{oauth_port}/login"),
+         OAUTH_SCOPES.to_vec(),
+     )
+-    .wrap_err("token retrieval failed")?;
++    .build()
++    .wrap_err("client creation failed")?;
++
++    let token = oauth_client
++        .get_access_token()
++        .wrap_err("token retrival failed")?;
+ 
+     let creds = Credentials::with_access_token(token.access_token);
+ 
+diff --git a/src/process.rs b/src/process.rs
+index 3d781e6..f750a92 100644
+--- a/src/process.rs
++++ b/src/process.rs
+@@ -2,6 +2,7 @@ use crate::error::Error;
+ use librespot_metadata::audio::AudioItem;
+ use librespot_playback::player::PlayerEvent;
+ use log::info;
++
+ use std::{collections::HashMap, process::Stdio};
+ use tokio::{
+     io::{self, AsyncWriteExt},
+@@ -179,10 +180,13 @@ pub(crate) fn spawn_program_on_event(
+             env.insert("PLAYER_EVENT", "shuffle_changed".to_string());
+             env.insert("SHUFFLE", shuffle.to_string());
+         }
+-        PlayerEvent::RepeatChanged { repeat } => {
++        PlayerEvent::RepeatChanged { context, track } => {
+             env.insert("PLAYER_EVENT", "repeat_changed".to_string());
+-            let val = match repeat {
+-                true => "all",
++            let val = match context {
++                true => match track {
++                    true => "track",
++                    false => "all",
++                },
+                 false => "none",
+             }
+             .to_string();
+@@ -196,6 +200,16 @@ pub(crate) fn spawn_program_on_event(
+             env.insert("PLAYER_EVENT", "filterexplicit_changed".to_string());
+             env.insert("FILTEREXPLICIT", filter.to_string());
+         }
++        PlayerEvent::PositionChanged {
++            play_request_id,
++            position_ms,
++            track_id,
++        } => {
++            env.insert("PLAYER_EVENT", "position_changed".to_string());
++            env.insert("TRACK_ID", track_id.to_base62().unwrap());
++            env.insert("POSITION_MS", position_ms.to_string());
++            env.insert("PLAY_REQUEST_ID", play_request_id.to_string());
++        }
+     }
+     spawn_program(shell, cmd, env)
+ }
+diff --git a/src/setup.rs b/src/setup.rs
+index 6f1e486..6133382 100644
+--- a/src/setup.rs
++++ b/src/setup.rs
+@@ -5,7 +5,7 @@ use crate::{
+     main_loop::{self, CredentialsProvider},
+     utils::Backoff,
+ };
+-use color_eyre::{eyre::eyre, Section};
++use color_eyre::{Section, eyre::eyre};
+ use futures::StreamExt as _;
+ use librespot_playback::{
+     audio_backend::{self},
+@@ -44,7 +44,11 @@ pub(crate) fn initial_state(
+             }
+             _ => {
+                 info!("Using software volume controller.");
+-                Arc::new(mixer::softmixer::SoftMixer::open(MixerConfig::default()))
++
++                // This won't ever panic: https://docs.rs/librespot-playback/0.7.1/src/librespot_playback/mixer/softmixer.rs.html#18-26
++                let mixer = mixer::softmixer::SoftMixer::open(MixerConfig::default())
++                    .expect("SoftMixer::open never returns an Error");
++                Arc::new(mixer)
+             }
+         }
+     };
+@@ -116,9 +120,9 @@ pub(crate) fn initial_state(
+         (None, Some(creds)) => CredentialsProvider::CredentialsOnly(creds),
+         (None, None) => {
+             return Err(
+-                eyre!("Discovery unavailable and no credentials found.").with_suggestion(|| {
+-                    "Try enabling discovery or logging in first with `spotifyd authenticate`."
+-                }),
++                eyre!("Discovery unavailable and no credentials found.").with_suggestion(
++                    || "Try enabling discovery or logging in first with `spotifyd authenticate`.",
++                ),
+             );
+         }
+     };
+diff --git a/src/utils.rs b/src/utils.rs
+index b07497e..e03a6dd 100644
+--- a/src/utils.rs
++++ b/src/utils.rs
+@@ -139,7 +139,10 @@ mod tests {
+     fn test_envvar_discovery() {
+         init_logger();
+ 
+-        env::set_var("SHELL", "fantasy_shell");
++        // SAFETY: this is part of the single-threaded tests
++        unsafe {
++            env::set_var("SHELL", "fantasy_shell");
++        }
+ 
+         let shell = get_shell().unwrap();
+         assert_eq!(shell, "fantasy_shell");
+-- 
+2.51.0
+

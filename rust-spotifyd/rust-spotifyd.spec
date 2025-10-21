@@ -5,7 +5,7 @@
 
 Name:           rust-spotifyd
 Version:        0.4.1
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Spotify daemon
 
 License:        GPL-3.0-only
@@ -24,9 +24,9 @@ Source:         spotify-connect.xml
 # Automatically generated patch to strip dependencies and normalize metadata
 Patch:          spotifyd-fix-metadata-auto.diff
 # Relax version requirements for dependencies shipped in Fedora
-Patch:          0001-relax-dependencies-on-directories-and-gethostname.patch
-# Switch dep to syslog 6 because syslog 7 is not yet in Fedora
-Patch:          0002-switch-to-syslog-6.patch
+Patch:          0001-relax-version-contrainsts-on-dependencies.patch
+# Patch back-ported from https://github.com/Spotifyd/spotifyd/pull/1371
+Patch:          0002-port-to-librespot-0.7.1.patch
 
 BuildRequires:  cargo-rpm-macros >= 24
 BuildRequires:  systemd-rpm-macros
@@ -39,7 +39,9 @@ A Spotify daemon.}
 
 %package     -n %{crate}
 Summary:        %{summary}
-License:        (Apache-2.0 OR MIT) AND BSD-3-Clause AND 0BSD OR MIT OR Apache-2.0 AND Apache-2.0 AND ISC AND (MIT OR Apache-2.0) AND Apache-2.0 OR BSL-1.0 AND Apache-2.0 OR ISC OR MIT AND Apache-2.0 WITH LLVM-exception OR Apache-2.0 OR MIT AND BSD-2-Clause OR Apache-2.0 OR MIT AND BSD-3-Clause AND GPL-3.0-only AND ISC AND (Apache-2.0 OR ISC) AND OpenSSL AND LGPL-3.0-or-later OR MPL-2.0 AND MIT AND MIT OR Apache-2.0 AND MIT OR BSD-3-Clause AND MIT OR Zlib OR Apache-2.0 AND MPL-2.0 AND Unicode-3.0 AND Unlicense OR MIT AND Zlib OR Apache-2.0 OR MIT
+License:        (Apache-2.0 OR MIT) AND BSD-3-Clause AND (MIT OR Apache-2.0) AND Unicode-3.0 AND 0BSD OR MIT OR Apache-2.0 AND Apache-2.0 AND Apache-2.0 OR BSL-1.0 AND Apache-2.0 OR MIT AND Apache-2.0 WITH LLVM-exception OR Apache-2.0 OR MIT AND BSD-2-Clause OR Apache-2.0 OR MIT AND BSD-3-Clause AND GPL-3.0-only AND ISC AND (Apache-2.0 OR ISC) AND OpenSSL AND LGPL-3.0-or-later OR MPL-2.0 AND MIT AND MIT OR Zlib OR Apache-2.0 AND MPL-2.0 AND Unicode-3.0 AND Unlicense OR MIT AND Zlib AND Zlib OR Apache-2.0 OR MIT
+
+Requires: avahi
 Requires: firewalld-filesystem
 %{?sysusers_requires_compat}
 
@@ -104,6 +106,9 @@ install -Dm 0644 %{SOURCE5} %{buildroot}%{_prefix}/lib/firewalld/services/spotif
 %endif
 
 %changelog
+* Tue Oct 21 2025 Mat Booth <mat.booth@gmail.com> - 0.4.1-4
+- Backport patches to bump the librespot dependency to 0.7.1
+
 * Mon Oct 20 2025 Mat Booth <mat.booth@gmail.com> - 0.4.1-3
 - Install a cache directory
 
