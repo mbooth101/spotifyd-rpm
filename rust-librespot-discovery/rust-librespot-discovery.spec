@@ -5,8 +5,8 @@
 %global crate librespot-discovery
 
 Name:           rust-librespot-discovery
-Version:        0.6.0
-Release:        2%{?dist}
+Version:        0.7.1
+Release:        1%{?dist}
 Summary:        Discovery logic for librespot
 
 License:        MIT
@@ -48,40 +48,40 @@ use the "default" feature of the "%{crate}" crate.
 %files       -n %{name}+default-devel
 %ghost %{crate_instdir}/Cargo.toml
 
-%package     -n %{name}+dns-sd-devel
+%package     -n %{name}+native-tls-devel
 Summary:        %{summary}
 BuildArch:      noarch
 
-%description -n %{name}+dns-sd-devel %{_description}
+%description -n %{name}+native-tls-devel %{_description}
 
 This package contains library source intended for building other packages which
-use the "dns-sd" feature of the "%{crate}" crate.
+use the "native-tls" feature of the "%{crate}" crate.
 
-%files       -n %{name}+dns-sd-devel
+%files       -n %{name}+native-tls-devel
 %ghost %{crate_instdir}/Cargo.toml
 
-%package     -n %{name}+libmdns-devel
+%package     -n %{name}+rustls-tls-native-roots-devel
 Summary:        %{summary}
 BuildArch:      noarch
 
-%description -n %{name}+libmdns-devel %{_description}
+%description -n %{name}+rustls-tls-native-roots-devel %{_description}
 
 This package contains library source intended for building other packages which
-use the "libmdns" feature of the "%{crate}" crate.
+use the "rustls-tls-native-roots" feature of the "%{crate}" crate.
 
-%files       -n %{name}+libmdns-devel
+%files       -n %{name}+rustls-tls-native-roots-devel
 %ghost %{crate_instdir}/Cargo.toml
 
-%package     -n %{name}+serde-devel
+%package     -n %{name}+rustls-tls-webpki-roots-devel
 Summary:        %{summary}
 BuildArch:      noarch
 
-%description -n %{name}+serde-devel %{_description}
+%description -n %{name}+rustls-tls-webpki-roots-devel %{_description}
 
 This package contains library source intended for building other packages which
-use the "serde" feature of the "%{crate}" crate.
+use the "rustls-tls-webpki-roots" feature of the "%{crate}" crate.
 
-%files       -n %{name}+serde-devel
+%files       -n %{name}+rustls-tls-webpki-roots-devel
 %ghost %{crate_instdir}/Cargo.toml
 
 %package     -n %{name}+with-avahi-devel
@@ -94,42 +94,6 @@ This package contains library source intended for building other packages which
 use the "with-avahi" feature of the "%{crate}" crate.
 
 %files       -n %{name}+with-avahi-devel
-%ghost %{crate_instdir}/Cargo.toml
-
-%package     -n %{name}+with-dns-sd-devel
-Summary:        %{summary}
-BuildArch:      noarch
-
-%description -n %{name}+with-dns-sd-devel %{_description}
-
-This package contains library source intended for building other packages which
-use the "with-dns-sd" feature of the "%{crate}" crate.
-
-%files       -n %{name}+with-dns-sd-devel
-%ghost %{crate_instdir}/Cargo.toml
-
-%package     -n %{name}+with-libmdns-devel
-Summary:        %{summary}
-BuildArch:      noarch
-
-%description -n %{name}+with-libmdns-devel %{_description}
-
-This package contains library source intended for building other packages which
-use the "with-libmdns" feature of the "%{crate}" crate.
-
-%files       -n %{name}+with-libmdns-devel
-%ghost %{crate_instdir}/Cargo.toml
-
-%package     -n %{name}+zbus-devel
-Summary:        %{summary}
-BuildArch:      noarch
-
-%description -n %{name}+zbus-devel %{_description}
-
-This package contains library source intended for building other packages which
-use the "zbus" feature of the "%{crate}" crate.
-
-%files       -n %{name}+zbus-devel
 %ghost %{crate_instdir}/Cargo.toml
 
 %prep
@@ -151,6 +115,9 @@ use the "zbus" feature of the "%{crate}" crate.
 %endif
 
 %changelog
+* Tue Oct 21 2025 Mat Booth <mat.booth@gmail.com> - 0.7.1-1
+- Update to latest released version
+
 * Mon Oct 20 2025 Mat Booth <mat.booth@gmail.com> - 0.6.0-2
 - Switch to avahi backend by default
 

@@ -1,6 +1,6 @@
-From f913b2e6a84f1f390f6b9c46366c4a9c53625d68 Mon Sep 17 00:00:00 2001
+From cd360b5a35b8a134f99c98a314f13c35b83fbb7c Mon Sep 17 00:00:00 2001
 From: Mat Booth <mat.booth@gmail.com>
-Date: Mon, 20 Oct 2025 21:23:21 +0100
+Date: Tue, 21 Oct 2025 13:34:23 +0100
 Subject: [PATCH] use avahi backend by default
 
 ---
@@ -8,18 +8,18 @@ Subject: [PATCH] use avahi backend by default
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/Cargo.toml b/Cargo.toml
-index b55b43e..08d73f6 100644
+index 3ea4308..833dd25 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -140,7 +140,7 @@ features = [
- ]
+@@ -28,7 +28,7 @@ repository = "https://github.com/librespot-org/librespot"
  
  [features]
--default = ["with-libmdns"]
-+default = ["with-avahi"]
- with-avahi = [
-     "zbus",
-     "serde",
+ default = [
+-    "with-libmdns",
++    "with-avahi",
+     "native-tls",
+ ]
+ native-tls = ["librespot-core/native-tls"]
 -- 
 2.51.0
 

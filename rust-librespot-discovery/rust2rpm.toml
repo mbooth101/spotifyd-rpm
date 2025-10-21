@@ -1,3 +1,6 @@
+[features]
+hide = [ "with-dns-sd", "with-libmdns" ]
+
 [[package.extra-patches]]
 number = 10
 file = "0001-use-avahi-backend-by-default.patch"
