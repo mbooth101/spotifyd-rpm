@@ -6,13 +6,15 @@
 %global crate governor
 
 Name:           rust-governor
-Version:        0.6.3
-Release:        2%{?dist}
+Version:        0.10.1
+Release:        1%{?dist}
 Summary:        Rate-limiting implementation in Rust
 
 License:        MIT
 URL:            https://crates.io/crates/governor
 Source:         %{crates_source}
+# * Drop support for wasm due to missing dep, we don't need it
+Patch10:        0001-drop-wasm-support.patch
 
 BuildRequires:  cargo-rpm-macros >= 24
 
@@ -60,30 +62,6 @@ use the "dashmap" feature of the "%{crate}" crate.
 %files       -n %{name}+dashmap-devel
 %ghost %{crate_instdir}/Cargo.toml
 
-%package     -n %{name}+futures-devel
-Summary:        %{summary}
-BuildArch:      noarch
-
-%description -n %{name}+futures-devel %{_description}
-
-This package contains library source intended for building other packages which
-use the "futures" feature of the "%{crate}" crate.
-
-%files       -n %{name}+futures-devel
-%ghost %{crate_instdir}/Cargo.toml
-
-%package     -n %{name}+futures-timer-devel
-Summary:        %{summary}
-BuildArch:      noarch
-
-%description -n %{name}+futures-timer-devel %{_description}
-
-This package contains library source intended for building other packages which
-use the "futures-timer" feature of the "%{crate}" crate.
-
-%files       -n %{name}+futures-timer-devel
-%ghost %{crate_instdir}/Cargo.toml
-
 %package     -n %{name}+jitter-devel
 Summary:        %{summary}
 BuildArch:      noarch
@@ -108,18 +86,6 @@ use the "quanta" feature of the "%{crate}" crate.
 %files       -n %{name}+quanta-devel
 %ghost %{crate_instdir}/Cargo.toml
 
-%package     -n %{name}+rand-devel
-Summary:        %{summary}
-BuildArch:      noarch
-
-%description -n %{name}+rand-devel %{_description}
-
-This package contains library source intended for building other packages which
-use the "rand" feature of the "%{crate}" crate.
-
-%files       -n %{name}+rand-devel
-%ghost %{crate_instdir}/Cargo.toml
-
 %package     -n %{name}+std-devel
 Summary:        %{summary}
 BuildArch:      noarch
@@ -135,8 +101,8 @@ use the "std" feature of the "%{crate}" crate.
 %prep
 %autosetup -n %{crate}-%{version} -p1
 # Fix erroneous execute bits
-chmod -x src/state/direct/streams.rs src/state/keyed/dashmap.rs src/lib.rs
-chmod -x tests/future.rs tests/keyed_dashmap.rs tests/memory_leaks.rs tests/sinks.rs tests/streams.rs
+chmod -x src/state/direct/streams.rs src/lib.rs
+chmod -x tests/future.rs tests/memory_leaks.rs tests/sinks.rs tests/streams.rs
 %cargo_prep
 
 %generate_buildrequires
@@ -154,6 +120,9 @@ chmod -x tests/future.rs tests/keyed_dashmap.rs tests/memory_leaks.rs tests/sink
 %endif
 
 %changelog
+* Tue Oct 21 2025 Mat Booth <mat.booth@gmail.com> - 0.10.1-1
+- Update to latest released version
+
 * Fri Oct 17 2025 Mat Booth <mat.booth@gmail.com> - 0.6.3-2
 - Drop unneeded no_std subpackage
 

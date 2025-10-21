@@ -1,0 +1,49 @@
+From cd205e457f5540c9ef3af073e53bc5e219cb7aa1 Mon Sep 17 00:00:00 2001
+From: Mat Booth <mat.booth@gmail.com>
+Date: Tue, 21 Oct 2025 11:29:26 +0100
+Subject: [PATCH] drop wasm support
+
+---
+ Cargo.toml            | 4 ----
+ src/clock/with_std.rs | 3 +--
+ 2 files changed, 1 insertion(+), 6 deletions(-)
+
+diff --git a/Cargo.toml b/Cargo.toml
+index 760aa2b..34c0cb0 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -149,7 +149,6 @@ default-features = false
+ 
+ [dependencies.getrandom]
+ version = "0.3"
+-features = ["wasm_js"]
+ optional = true
+ 
+ [dependencies.hashbrown]
+@@ -181,9 +180,6 @@ version = "1.6.1"
+ [dependencies.spinning_top]
+ version = "0.3"
+ 
+-[dependencies.web-time]
+-version = "1.1.0"
+-
+ [dev-dependencies.assertables]
+ version = "9.5.0"
+ 
+diff --git a/src/clock/with_std.rs b/src/clock/with_std.rs
+index d9545fa..df51d81 100644
+--- a/src/clock/with_std.rs
++++ b/src/clock/with_std.rs
+@@ -4,8 +4,7 @@ use std::prelude::v1::*;
+ 
+ use crate::nanos::Nanos;
+ use std::ops::Add;
+-use std::time::{Duration, SystemTime};
+-use web_time::Instant;
++use std::time::{Duration, Instant, SystemTime};
+ 
+ /// The monotonic clock implemented by [`Instant`].
+ #[derive(Clone, Debug, Default)]
+-- 
+2.51.0
+

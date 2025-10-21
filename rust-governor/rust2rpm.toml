@@ -8,6 +8,11 @@ comments = [ "Tests disabled due to missing dependencies" ]
 [scripts.prep]
 pre = [
 	"# Fix erroneous execute bits",
-	"chmod -x src/state/direct/streams.rs src/state/keyed/dashmap.rs src/lib.rs",
-	"chmod -x tests/future.rs tests/keyed_dashmap.rs tests/memory_leaks.rs tests/sinks.rs tests/streams.rs"
+	"chmod -x src/state/direct/streams.rs src/lib.rs",
+	"chmod -x tests/future.rs tests/memory_leaks.rs tests/sinks.rs tests/streams.rs"
 ]
+
+[[package.extra-patches]]
+number = 10
+file = "0001-drop-wasm-support.patch"
+comments = [ "Drop support for wasm due to missing dep, we don't need it" ]
