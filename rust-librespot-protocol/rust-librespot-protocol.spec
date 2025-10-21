@@ -5,7 +5,7 @@
 %global crate librespot-protocol
 
 Name:           rust-librespot-protocol
-Version:        0.6.0
+Version:        0.7.1
 Release:        1%{?dist}
 Summary:        Protobuf logic for communicating with Spotify servers
 
@@ -64,5 +64,8 @@ use the "default" feature of the "%{crate}" crate.
 %endif
 
 %changelog
+* Tue Oct 21 2025 Mat Booth <mat.booth@gmail.com> - 0.7.1-1
+- Update to latest released version
+
 * Thu Oct 16 2025 Mat Booth <mat.booth@gmail.com> - 0.6.0-1
 - Initial package
