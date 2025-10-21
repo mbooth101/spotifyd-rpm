@@ -5,16 +5,16 @@
 %global crate librespot-core
 
 Name:           rust-librespot-core
-Version:        0.6.0
-Release:        2%{?dist}
+Version:        0.7.1
+Release:        1%{?dist}
 Summary:        Core functionality provided by librespot
 
 License:        MIT
 URL:            https://crates.io/crates/librespot-core
 Source:         %{crates_source}
-# * Upgrade sysinfo to a version that is available in Fedora
+# * Upgrade sysinfo to a version available in Fedora
 Patch10:        0001-fix-sysinfo-dependency.patch
-# * Backport change from upstream for newer tungstenite version
+# * Upgrade tungstenite to a version available in Fedora
 Patch11:        0002-fix-tungstenite-dependency.patch
 # * Downgrade vergen to 8 because that's what Fedora has
 Patch12:        0003-fix-vergen-dependency.patch
@@ -51,6 +51,66 @@ use the "default" feature of the "%{crate}" crate.
 %files       -n %{name}+default-devel
 %ghost %{crate_instdir}/Cargo.toml
 
+%package     -n %{name}+__rustls-devel
+Summary:        %{summary}
+BuildArch:      noarch
+
+%description -n %{name}+__rustls-devel %{_description}
+
+This package contains library source intended for building other packages which
+use the "__rustls" feature of the "%{crate}" crate.
+
+%files       -n %{name}+__rustls-devel
+%ghost %{crate_instdir}/Cargo.toml
+
+%package     -n %{name}+hyper-rustls-devel
+Summary:        %{summary}
+BuildArch:      noarch
+
+%description -n %{name}+hyper-rustls-devel %{_description}
+
+This package contains library source intended for building other packages which
+use the "hyper-rustls" feature of the "%{crate}" crate.
+
+%files       -n %{name}+hyper-rustls-devel
+%ghost %{crate_instdir}/Cargo.toml
+
+%package     -n %{name}+native-tls-devel
+Summary:        %{summary}
+BuildArch:      noarch
+
+%description -n %{name}+native-tls-devel %{_description}
+
+This package contains library source intended for building other packages which
+use the "native-tls" feature of the "%{crate}" crate.
+
+%files       -n %{name}+native-tls-devel
+%ghost %{crate_instdir}/Cargo.toml
+
+%package     -n %{name}+rustls-tls-native-roots-devel
+Summary:        %{summary}
+BuildArch:      noarch
+
+%description -n %{name}+rustls-tls-native-roots-devel %{_description}
+
+This package contains library source intended for building other packages which
+use the "rustls-tls-native-roots" feature of the "%{crate}" crate.
+
+%files       -n %{name}+rustls-tls-native-roots-devel
+%ghost %{crate_instdir}/Cargo.toml
+
+%package     -n %{name}+rustls-tls-webpki-roots-devel
+Summary:        %{summary}
+BuildArch:      noarch
+
+%description -n %{name}+rustls-tls-webpki-roots-devel %{_description}
+
+This package contains library source intended for building other packages which
+use the "rustls-tls-webpki-roots" feature of the "%{crate}" crate.
+
+%files       -n %{name}+rustls-tls-webpki-roots-devel
+%ghost %{crate_instdir}/Cargo.toml
+
 %prep
 %autosetup -n %{crate}-%{version} -p1
 %cargo_prep
@@ -70,6 +130,9 @@ use the "default" feature of the "%{crate}" crate.
 %endif
 
 %changelog
+* Tue Oct 21 2025 Mat Booth <mat.booth@gmail.com> - 0.7.1-1
+- Update to latest released version
+
 * Sat Oct 18 2025 Mat Booth <mat.booth@gmail.com> - 0.6.0-2
 - Patch dependencies on vergen, sysinfo and tungstenite
 

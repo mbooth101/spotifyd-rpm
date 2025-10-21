@@ -1,6 +1,6 @@
-From f3a32330e6ce5ff5c1acc7b0174b95091c3a9dd2 Mon Sep 17 00:00:00 2001
+From f40b667a9e87dddd8167f0094bb86aabb855c9d3 Mon Sep 17 00:00:00 2001
 From: Mat Booth <mat.booth@gmail.com>
-Date: Sat, 18 Oct 2025 11:48:10 +0100
+Date: Tue, 21 Oct 2025 10:59:33 +0100
 Subject: [PATCH 3/3] fix vergen dependency
 
 ---
@@ -9,26 +9,27 @@ Subject: [PATCH 3/3] fix vergen dependency
  2 files changed, 9 insertions(+), 18 deletions(-)
 
 diff --git a/Cargo.toml b/Cargo.toml
-index 742b2a1..546f28e 100644
+index 75058a7..b438ff3 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -233,7 +233,7 @@ features = [
- [build-dependencies.rand]
- version = "0.8"
+@@ -275,7 +275,7 @@ version = "0.9"
+ [build-dependencies.rand_distr]
+ version = "0.5"
  
 -[build-dependencies.vergen-gitcl]
--version = "1.0.0"
+-version = "1.0"
 -features = ["build"]
 +[build-dependencies.vergen]
 +version = "8"
 +features = ["build", "git", "gitcl"]
  default-features = false
 diff --git a/build.rs b/build.rs
-index 008ec1d..920455d 100644
+index 4413d2f..3d96fe5 100644
 --- a/build.rs
 +++ b/build.rs
-@@ -1,19 +1,11 @@
- use rand::{distributions::Alphanumeric, Rng};
+@@ -1,20 +1,12 @@
+ use rand::Rng;
+ use rand_distr::Alphanumeric;
 -use vergen_gitcl::{BuildBuilder, Emitter, GitclBuilder};
 +use vergen::EmitBuilder;
  
@@ -53,7 +54,7 @@ index 008ec1d..920455d 100644
          .emit()
          .expect("Unable to generate the cargo keys!");
      let build_id = match std::env::var("SOURCE_DATE_EPOCH") {
-@@ -26,5 +18,4 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
+@@ -27,5 +19,4 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
      };
  
      println!("cargo:rustc-env=LIBRESPOT_BUILD_ID={build_id}");
