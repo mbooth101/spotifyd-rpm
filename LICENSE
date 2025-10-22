@@ -1,0 +1,28 @@
+# Licensing
+
+While the main spotifyd application is licensed under GNU General Public License v3.0, the supporting libraries packaged by this repo are licensed in a variety of ways, including but not limited to the following licenses:
+
+# (Apache-2.0 OR MIT) AND BSD-3-Clause
+# (MIT OR Apache-2.0) AND Unicode-3.0
+# 0BSD OR MIT OR Apache-2.0
+# Apache-2.0
+# Apache-2.0 OR BSL-1.0
+# Apache-2.0 OR MIT
+# Apache-2.0 WITH LLVM-exception OR Apache-2.0 OR MIT
+# BSD-2-Clause OR Apache-2.0 OR MIT
+# BSD-3-Clause
+# GPL-3.0-only
+# ISC
+# ISC AND (Apache-2.0 OR ISC)
+# ISC AND (Apache-2.0 OR ISC) AND OpenSSL
+# LGPL-3.0-or-later OR MPL-2.0
+# MIT
+# MIT OR Apache-2.0
+# MIT OR Zlib OR Apache-2.0
+# MPL-2.0
+# Unicode-3.0
+# Unlicense OR MIT
+# Zlib
+# Zlib OR Apache-2.0 OR MIT
+
+The RPM specfile and supporting files may be considered to be licensed under the same terms as the software it packages.
