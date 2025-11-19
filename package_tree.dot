@@ -37,7 +37,6 @@ rankdir="LR";
 "rust-spotifyd" -> "rust-aws-lc-rs";
 "rust-spotifyd" -> "rust-dbus-crossroads";
 "rust-spotifyd" -> "rust-dbus-tokio";
-"rust-spotifyd" -> "rust-fern0.7";
 "rust-spotifyd" -> "rust-librespot-audio";
 "rust-spotifyd" -> "rust-librespot-connect";
 "rust-spotifyd" -> "rust-librespot-core";
