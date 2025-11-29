@@ -5,7 +5,7 @@
 %global crate librespot-discovery
 
 Name:           rust-librespot-discovery
-Version:        0.7.1
+Version:        0.8.0
 Release:        1%{?dist}
 Summary:        Discovery logic for librespot
 
@@ -115,6 +115,9 @@ use the "with-avahi" feature of the "%{crate}" crate.
 %endif
 
 %changelog
+* Sat Nov 29 2025 Mat Booth <mat.booth@gmail.com> - 0.8.0-1
+- Update to latest release
+
 * Tue Oct 21 2025 Mat Booth <mat.booth@gmail.com> - 0.7.1-1
 - Update to latest released version
 
