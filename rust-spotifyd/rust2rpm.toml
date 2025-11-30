@@ -1,12 +1,7 @@
 [features]
-hide = [ "portaudio_backend", "rodio_backend", "rodiojack_backend" ]
+hide = [ "portaudio_backend", "rodio_backend", "rodiojack_backend", "pulseaudio_backend" ]
 
 [[package.extra-patches]]
 number = 10
 file = "0001-relax-version-contrainsts-on-dependencies.patch"
 comments = [ "Relax version requirements for dependencies shipped in Fedora" ]
-
-[[package.extra-patches]]
-number = 11
-file = "0002-port-to-librespot-0.7.1.patch"
-comments = [ "Patch back-ported from https://github.com/Spotifyd/spotifyd/pull/1371" ]

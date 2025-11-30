@@ -1,6 +1,6 @@
---- spotifyd-0.4.1/Cargo.toml	1970-01-01T00:00:01+00:00
-+++ spotifyd-0.4.1/Cargo.toml	2025-10-20T14:04:37.474371+00:00
-@@ -195,12 +195,6 @@
+--- spotifyd-0.4.2/Cargo.toml	1970-01-01T00:00:01+00:00
++++ spotifyd-0.4.2/Cargo.toml	2025-11-30T17:00:39.405756+00:00
+@@ -214,12 +214,6 @@
  version = "1.12.6"
  features = ["bindgen"]
  
@@ -13,7 +13,7 @@
  [target."cfg(unix)".dependencies.daemonize]
  version = "0.5"
  
-@@ -209,3 +203,4 @@
+@@ -228,3 +222,4 @@
  
  [profile.release]
  lto = true

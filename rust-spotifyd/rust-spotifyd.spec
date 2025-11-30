@@ -4,8 +4,8 @@
 %global crate spotifyd
 
 Name:           rust-spotifyd
-Version:        0.4.1
-Release:        4%{?dist}
+Version:        0.4.2
+Release:        1%{?dist}
 Summary:        Spotify daemon
 
 License:        GPL-3.0-only
@@ -23,10 +23,10 @@ Source:         spotify-connect.xml
 
 # Automatically generated patch to strip dependencies and normalize metadata
 Patch:          spotifyd-fix-metadata-auto.diff
+# Manually created patch for downstream crate metadata changes
+Patch:          spotifyd-fix-metadata.diff
 # Relax version requirements for dependencies shipped in Fedora
 Patch:          0001-relax-version-contrainsts-on-dependencies.patch
-# Patch back-ported from https://github.com/Spotifyd/spotifyd/pull/1371
-Patch:          0002-port-to-librespot-0.7.1.patch
 
 BuildRequires:  cargo-rpm-macros >= 24
 BuildRequires:  systemd-rpm-macros
@@ -106,6 +106,9 @@ install -Dm 0644 %{SOURCE5} %{buildroot}%{_prefix}/lib/firewalld/services/spotif
 %endif
 
 %changelog
+* Sun Nov 30 2025 Mat Booth <mat.booth@gmail.com> - 0.4.2-1
+- Update to latest release
+
 * Tue Oct 21 2025 Mat Booth <mat.booth@gmail.com> - 0.4.1-4
 - Backport patches to bump the librespot dependency to 0.7.1
 
