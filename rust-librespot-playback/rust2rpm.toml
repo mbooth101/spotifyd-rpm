@@ -1,5 +1,5 @@
 [features]
-hide = ["jackaudio-backend", "sdl-backend", "rodio-backend", "rodiojack-backend", "portaudio-backend", "gstreamer-backend", "passthrough-decoder" ]
+hide = ["jackaudio-backend", "sdl-backend", "rodio-backend", "rodiojack-backend", "portaudio-backend", "gstreamer-backend", "passthrough-decoder", "pulseaudio-backend" ]
 
 [[package.extra-patches]]
 number = 10

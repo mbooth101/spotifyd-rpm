@@ -6,7 +6,7 @@
 
 Name:           rust-librespot-playback
 Version:        0.8.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Audio playback logic for librespot
 
 License:        MIT
@@ -71,18 +71,6 @@ use the "native-tls" feature of the "%{crate}" crate.
 %files       -n %{name}+native-tls-devel
 %ghost %{crate_instdir}/Cargo.toml
 
-%package     -n %{name}+pulseaudio-backend-devel
-Summary:        %{summary}
-BuildArch:      noarch
-
-%description -n %{name}+pulseaudio-backend-devel %{_description}
-
-This package contains library source intended for building other packages which
-use the "pulseaudio-backend" feature of the "%{crate}" crate.
-
-%files       -n %{name}+pulseaudio-backend-devel
-%ghost %{crate_instdir}/Cargo.toml
-
 %package     -n %{name}+rustls-tls-native-roots-devel
 Summary:        %{summary}
 BuildArch:      noarch
@@ -126,6 +114,9 @@ use the "rustls-tls-webpki-roots" feature of the "%{crate}" crate.
 %endif
 
 %changelog
+* Sun Nov 30 2025 Mat Booth <mat.booth@gmail.com> - 0.8.0-2
+- Drop pulseaudio backend
+
 * Sat Nov 29 2025 Mat Booth <mat.booth@gmail.com> - 0.8.0-1
 - Update to latest release
 
