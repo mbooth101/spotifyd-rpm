@@ -1,0 +1,10 @@
+--- symphonia-0.5.5/Cargo.toml	1970-01-01T00:00:01+00:00
++++ symphonia-0.5.5/Cargo.toml	2025-12-03T10:53:40.041049+00:00
+@@ -78,7 +78,6 @@
+     "ogg",
+     "pcm",
+     "vorbis",
+-    "wav",
+ ]
+ flac = ["symphonia-bundle-flac"]
+ isomp4 = ["symphonia-format-isomp4"]

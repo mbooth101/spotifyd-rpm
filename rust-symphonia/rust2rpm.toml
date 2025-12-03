@@ -1,2 +1,4 @@
+[package]
+cargo-toml-patch-comments = [ "Remove RIFF-based formats from the default feature" ]
 [features]
-hide = [ "aac", "symphonia-codec-aac", "alac", "symphonia-codec-alac", "caf", "symphonia-format-caf", "isomp4", "symphonia-format-isomp4", "all", "all-codecs", "all-formats" ]
+hide = [ "aac", "symphonia-codec-aac", "alac", "symphonia-codec-alac", "caf", "symphonia-format-caf", "isomp4", "symphonia-format-isomp4", "aiff", "wav", "symphonia-format-riff", "all", "all-codecs", "all-formats" ]

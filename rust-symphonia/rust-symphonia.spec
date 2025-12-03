@@ -6,12 +6,15 @@
 
 Name:           rust-symphonia
 Version:        0.5.5
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Pure Rust media container and audio decoding library
 
 License:        MPL-2.0
 URL:            https://crates.io/crates/symphonia
 Source:         %{crates_source}
+# Manually created patch for downstream crate metadata changes
+# * Remove RIFF-based formats from the default feature
+Patch:          symphonia-fix-metadata.diff
 
 BuildRequires:  cargo-rpm-macros >= 24
 
@@ -56,18 +59,6 @@ This package contains library source intended for building other packages which
 use the "adpcm" feature of the "%{crate}" crate.
 
 %files       -n %{name}+adpcm-devel
-%ghost %{crate_instdir}/Cargo.toml
-
-%package     -n %{name}+aiff-devel
-Summary:        %{summary}
-BuildArch:      noarch
-
-%description -n %{name}+aiff-devel %{_description}
-
-This package contains library source intended for building other packages which
-use the "aiff" feature of the "%{crate}" crate.
-
-%files       -n %{name}+aiff-devel
 %ghost %{crate_instdir}/Cargo.toml
 
 %package     -n %{name}+flac-devel
@@ -298,18 +289,6 @@ use the "symphonia-format-ogg" feature of the "%{crate}" crate.
 %files       -n %{name}+symphonia-format-ogg-devel
 %ghost %{crate_instdir}/Cargo.toml
 
-%package     -n %{name}+symphonia-format-riff-devel
-Summary:        %{summary}
-BuildArch:      noarch
-
-%description -n %{name}+symphonia-format-riff-devel %{_description}
-
-This package contains library source intended for building other packages which
-use the "symphonia-format-riff" feature of the "%{crate}" crate.
-
-%files       -n %{name}+symphonia-format-riff-devel
-%ghost %{crate_instdir}/Cargo.toml
-
 %package     -n %{name}+vorbis-devel
 Summary:        %{summary}
 BuildArch:      noarch
@@ -320,18 +299,6 @@ This package contains library source intended for building other packages which
 use the "vorbis" feature of the "%{crate}" crate.
 
 %files       -n %{name}+vorbis-devel
-%ghost %{crate_instdir}/Cargo.toml
-
-%package     -n %{name}+wav-devel
-Summary:        %{summary}
-BuildArch:      noarch
-
-%description -n %{name}+wav-devel %{_description}
-
-This package contains library source intended for building other packages which
-use the "wav" feature of the "%{crate}" crate.
-
-%files       -n %{name}+wav-devel
 %ghost %{crate_instdir}/Cargo.toml
 
 %prep
@@ -353,5 +320,8 @@ use the "wav" feature of the "%{crate}" crate.
 %endif
 
 %changelog
+* Wed Dec 03 2025 Mat Booth <mat.booth@gmail.com> - 0.5.5-2
+- Drop riff-based formats, spotify does not use it
+
 * Sat Oct 18 2025 Mat Booth <mat.booth@gmail.com> - 0.5.5-1
 - Initial package
