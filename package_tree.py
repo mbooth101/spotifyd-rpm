@@ -25,7 +25,7 @@ def main(argv):
     base.fill_sack(load_system_repo=False)
 
     # Find all RPMs in repository
-    all_query = base.sack.query().available()
+    all_query = base.sack.query().available().latest()
     all_pkgs = all_query.run()
 
     srpm_requirements = {}
