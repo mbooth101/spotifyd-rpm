@@ -5,7 +5,7 @@
 
 Name:           rust-spotifyd
 Version:        0.4.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Spotify daemon
 
 License:        GPL-3.0-only
@@ -106,6 +106,9 @@ install -Dm 0644 %{SOURCE5} %{buildroot}%{_prefix}/lib/firewalld/services/spotif
 %endif
 
 %changelog
+* Fri Dec 19 2025 Mat Booth <mat.booth@gmail.com> - 0.4.2-2
+- Drop no longer needed patch to rust-alsa version
+
 * Sun Nov 30 2025 Mat Booth <mat.booth@gmail.com> - 0.4.2-1
 - Update to latest release
 
