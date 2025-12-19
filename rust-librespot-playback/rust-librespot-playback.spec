@@ -6,7 +6,7 @@
 
 Name:           rust-librespot-playback
 Version:        0.8.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Audio playback logic for librespot
 
 License:        MIT
@@ -114,6 +114,9 @@ use the "rustls-tls-webpki-roots" feature of the "%{crate}" crate.
 %endif
 
 %changelog
+* Fri Dec 19 2025 Mat Booth <mat.booth@gmail.com> - 0.8.0-3
+- Drop no longer needed patch to rust-alsa version
+
 * Sun Nov 30 2025 Mat Booth <mat.booth@gmail.com> - 0.8.0-2
 - Drop pulseaudio backend
 
