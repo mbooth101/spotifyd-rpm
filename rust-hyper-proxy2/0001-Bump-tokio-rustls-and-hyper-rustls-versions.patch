@@ -1,0 +1,43 @@
+From 0aaafc8dc834c992fa4cee72ab21f41950987074 Mon Sep 17 00:00:00 2001
+From: Eugene Yakubovich <eyakubovich@gmail.com>
+Date: Tue, 28 Oct 2025 16:07:45 -0700
+Subject: [PATCH] Bump tokio-rustls and hyper-rustls versions
+
+---
+ Cargo.toml | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/Cargo.toml b/Cargo.toml
+index ea94fa2..b45cbf8 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -50,7 +50,7 @@ version = "1.0"
+ features = ["client"]
+ 
+ [dependencies.hyper-rustls]
+-version = "0.26.0"
++version = "0.27.0"
+ optional = true
+ 
+ [dependencies.hyper-tls]
+@@ -96,7 +96,7 @@ version = "0.6.4"
+ optional = true
+ 
+ [dependencies.tokio-rustls]
+-version = "0.25.0"
++version = "0.26.0"
+ optional = true
+ 
+ [dependencies.tower-service]
+@@ -107,7 +107,7 @@ version = "0.22"
+ optional = true
+ 
+ [dependencies.webpki-roots]
+-version = "0.26.0"
++version = "1.0.3"
+ optional = true
+ 
+ [dev-dependencies.futures]
+-- 
+2.52.0
+

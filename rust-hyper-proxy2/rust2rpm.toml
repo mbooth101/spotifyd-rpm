@@ -1,4 +1,0 @@
-[[package.extra-patches]]
-number = 10
-file = "0001-fix-hyper-rustls-dependency.patch"
-comments = ["Downgrade to hyper-rustls 0.25 due to compile errors with the latest version that Fedora has"]
