@@ -1,8 +1,8 @@
 [features]
-hide = [ "fips" ]
+hide = [ "fips", "legacy-des", "unstable", "test_logging", "dev-tests-only" ]
 
 [tests]
-run = "none"
+run = false
 comments = [ "Tests disabled due to missing dependencies" ]
 
 [[package.extra-patches]]

@@ -1,6 +1,6 @@
-From fd80589eab8b359e7a8791d6b4857486db6ed581 Mon Sep 17 00:00:00 2001
+From 888570b7f981bdb6304a5c26e6100bc4d97dde50 Mon Sep 17 00:00:00 2001
 From: Mat Booth <mat.booth@gmail.com>
-Date: Mon, 20 Oct 2025 13:36:04 +0100
+Date: Tue, 29 Sep 2026 21:22:08 +0100
 Subject: [PATCH 2/2] remove dep on fips variant
 
 ---
@@ -8,10 +8,10 @@ Subject: [PATCH 2/2] remove dep on fips variant
  1 file changed, 2 insertions(+), 4 deletions(-)
 
 diff --git a/Cargo.toml b/Cargo.toml
-index b2c94b3..c58eec0 100644
+index 0dd0f83..1848b0c 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -65,12 +65,10 @@ rustdoc-args = [
+@@ -68,12 +68,10 @@ development = [
  [features]
  alloc = []
  asan = [
@@ -27,5 +27,5 @@ index b2c94b3..c58eec0 100644
  default = [
      "aws-lc-sys",
 -- 
-2.51.0
+2.55.0
 
