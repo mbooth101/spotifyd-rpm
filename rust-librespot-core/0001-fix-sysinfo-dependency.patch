@@ -16,7 +16,7 @@ index 058c217..4b9d815 100644
  
  [dependencies.sysinfo]
 -version = "0.36"
-+version = "0.37"
++version = ">=0.36, <0.40"
  features = ["system"]
  default-features = false
  

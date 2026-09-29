@@ -16,7 +16,7 @@ index 4b9d815..75058a7 100644
  
  [dependencies.tokio-tungstenite]
 -version = "0.28"
-+version = "0.26"
++version = "0.29"
  default-features = false
  
  [dependencies.tokio-util]

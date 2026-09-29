@@ -6,7 +6,7 @@
 
 Name:           rust-librespot-core
 Version:        0.8.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Core functionality provided by librespot
 
 License:        MIT
@@ -130,6 +130,9 @@ use the "rustls-tls-webpki-roots" feature of the "%{crate}" crate.
 %endif
 
 %changelog
+* Tue Sep 29 2026 Mat Booth <mat.booth@gmail.com> - 0.8.0-2
+- Rebuild against newer tokio-tungstenite
+
 * Sat Nov 29 2025 Mat Booth <mat.booth@gmail.com> - 0.8.0-1
 - Update to latest release
 
