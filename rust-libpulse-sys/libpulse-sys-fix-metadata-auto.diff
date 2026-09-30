@@ -1,0 +1,10 @@
+--- libpulse-sys-1.23.0/Cargo.toml	1970-01-01T00:00:01+00:00
++++ libpulse-sys-1.23.0/Cargo.toml	2026-09-30T12:43:50.432499+00:00
+@@ -67,7 +67,3 @@
+ [build-dependencies.pkg-config]
+ version = "0.3.23"
+ 
+-[target."cfg(windows)".dependencies.winapi]
+-version = "0.3"
+-features = ["winsock2"]
+-default-features = false
