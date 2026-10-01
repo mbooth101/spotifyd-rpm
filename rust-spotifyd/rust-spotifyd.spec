@@ -5,7 +5,7 @@
 
 Name:           rust-spotifyd
 Version:        0.4.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Spotify daemon
 
 License:        GPL-3.0-only
@@ -24,9 +24,11 @@ Source:         spotify-connect.xml
 # Automatically generated patch to strip dependencies and normalize metadata
 Patch:          spotifyd-fix-metadata-auto.diff
 # Manually created patch for downstream crate metadata changes
+# * Fix requirement on gethostname
 Patch:          spotifyd-fix-metadata.diff
-# Relax version requirements for dependencies shipped in Fedora
-Patch:          0001-relax-version-contrainsts-on-dependencies.patch
+# Backport upstream fix for dbus mpris track indexing error
+# * https://github.com/Spotifyd/spotifyd/issues/1377
+Patch:          0001-dbus_mpris-fix-track-indexing-for-OpenUri.patch
 
 BuildRequires:  cargo-rpm-macros >= 24
 BuildRequires:  systemd-rpm-macros
@@ -84,6 +86,7 @@ Requires: firewalld-filesystem
 
 %generate_buildrequires
 %cargo_generate_buildrequires -f dbus_mpris
+echo 'pkgconfig(libpulse) >= 5.0'
 
 %build
 %cargo_build -f dbus_mpris
@@ -106,6 +109,9 @@ install -Dm 0644 %{SOURCE5} %{buildroot}%{_prefix}/lib/firewalld/services/spotif
 %endif
 
 %changelog
+* Thu Oct 01 2026 Mat Booth <mat.booth@gmail.com> - 0.4.2-3
+- Enable PulseAudio backend
+
 * Fri Dec 19 2025 Mat Booth <mat.booth@gmail.com> - 0.4.2-2
 - Drop no longer needed patch to rust-alsa version
 

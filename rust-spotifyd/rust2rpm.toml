@@ -1,7 +1,7 @@
 [features]
-hide = [ "portaudio_backend", "rodio_backend", "rodiojack_backend", "pulseaudio_backend" ]
+hide = [ "portaudio_backend", "rodio_backend", "rodiojack_backend" ]
 
-[[package.extra-patches]]
-number = 10
-file = "0001-relax-version-contrainsts-on-dependencies.patch"
-comments = [ "Relax version requirements for dependencies shipped in Fedora" ]
+[package]
+cargo-toml-patch-comments = [
+	"Fix requirement on gethostname"
+]
