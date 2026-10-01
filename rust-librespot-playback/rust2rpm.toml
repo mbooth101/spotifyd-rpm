@@ -1,7 +1,8 @@
 [features]
-hide = ["jackaudio-backend", "sdl-backend", "rodio-backend", "rodiojack-backend", "portaudio-backend", "gstreamer-backend", "passthrough-decoder", "pulseaudio-backend" ]
+hide = ["jackaudio-backend", "sdl-backend", "rodio-backend", "rodiojack-backend", "portaudio-backend", "gstreamer-backend", "passthrough-decoder" ]
 
-[[package.extra-patches]]
-number = 10
-file = "0001-switch-to-alsa-backend-by-default.patch"
-comments = [ "Switch to using alsa backend by default" ]
+[package]
+cargo-toml-patch-comments = [
+	"Switch to ALSA backend by default"
+]
+
